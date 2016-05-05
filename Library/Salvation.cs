@@ -1,176 +1,181 @@
-using Arena.Core;
-using Arena.Custom.SOTHC.MiTM.DataLayer;
-using System;
+﻿using System;
 using System.Data.SqlClient;
-using System.Runtime.CompilerServices;
+
+using Arena.Core;
+
+using Arena.Custom.SOTHC.MiTM.DataLayer;
+
 
 namespace Arena.Custom.SOTHC.MiTM
 {
-	[Serializable]
-	public class Salvation : ArenaObjectBase
-	{
-		private DateTime _dateCreated;
+    [Serializable]
+    public class Salvation : ArenaObjectBase
+    {
+        #region Private Properties
 
-		private DateTime _dateModified;
+        private DateTime _dateCreated, _dateModified;
+        private String _createdBy, _modifiedBy;
 
-		private string _createdBy;
+        private Person _person;
+        private int _personID;
 
-		private string _modifiedBy;
+        #endregion
 
-		private Arena.Core.Person _person;
 
-		private int _personID;
+        #region Public Properties
 
-		public string CreatedBy
-		{
-			get
-			{
-				return this._createdBy;
-			}
-		}
+        public int SalvationID { get; set; }
 
-		public DateTime DateCreated
-		{
-			get
-			{
-				return this._dateCreated;
-			}
-		}
+        public DateTime DateCreated { get { return _dateCreated; } }
 
-		public DateTime DateModified
-		{
-			get
-			{
-				return this._dateModified;
-			}
-		}
+        public DateTime DateModified { get { return _dateModified; } }
 
-		public string FirstName
-		{
-			get;
-			set;
-		}
+        public String CreatedBy { get { return _createdBy; } }
 
-		public string LastName
-		{
-			get;
-			set;
-		}
+        public String ModifiedBy { get { return _modifiedBy; } }
 
-		public string ModifiedBy
-		{
-			get
-			{
-				return this._modifiedBy;
-			}
-		}
+        public Person Person
+        {
+            get
+            {
+                if (_person == null)
+                    _person = new Person(_personID);
 
-		public Arena.Core.Person Person
-		{
-			get
-			{
-				if (this._person == null)
-				{
-					this._person = new Arena.Core.Person(this._personID);
-				}
-				return this._person;
-			}
-			set
-			{
-				this._person = value;
-				this._personID = (this._person != null ? this._person.get_PersonID() : -1);
-			}
-		}
+                return _person;
+            }
+            set
+            {
+                _person = value;
+                _personID = (_person != null ? _person.PersonID : -1);
+            }
+        }
+        public int PersonID
+        {
+            get
+            {
+                return _personID;
+            }
+            set
+            {
+                _personID = value;
+                _person = (_personID != -1 ? new Person(_personID) : null);
+            }
+        }
 
-		public int PersonID
-		{
-			get
-			{
-				return this._personID;
-			}
-			set
-			{
-				Arena.Core.Person person;
-				this._personID = value;
-				if (this._personID != -1)
-				{
-					person = new Arena.Core.Person(this._personID);
-				}
-				else
-				{
-					person = null;
-				}
-				this._person = person;
-			}
-		}
+        public String FirstName { get; set; }
 
-		public int SalvationID
-		{
-			get;
-			set;
-		}
+        public String LastName { get; set; }
 
-		public bool Status
-		{
-			get;
-			set;
-		}
+        public Boolean Status { get; set; }
 
-		public Salvation()
-		{
-			this.SalvationID = -1;
-			this._dateCreated = DateTime.Now;
-			this._dateModified = DateTime.Now;
-			this._createdBy = string.Empty;
-			this._modifiedBy = string.Empty;
-			this._personID = -1;
-			this.FirstName = string.Empty;
-			this.LastName = string.Empty;
-			this.Status = false;
-		}
+        #endregion
 
-		public Salvation(int salvationID) : this()
-		{
-			SqlDataReader salvationByID = (new SalvationData()).GetSalvationByID(salvationID);
-			if (salvationByID.Read())
-			{
-				this.LoadSalvation(salvationByID);
-			}
-			salvationByID.Close();
-		}
 
-		public Salvation(SqlDataReader reader) : this()
-		{
-			this.LoadSalvation(reader);
-		}
+        #region Constructors
 
-		public void Delete()
-		{
-			Salvation.Delete(this.SalvationID);
-			this.SalvationID = -1;
-		}
+        /// <summary>
+        /// Create a new, blank, Salvation record that can be filled in and saved.
+        /// </summary>
+        public Salvation()
+        {
+            SalvationID = -1;
+            _dateCreated = DateTime.Now;
+            _dateModified = DateTime.Now;
+            _createdBy = String.Empty;
+            _modifiedBy = String.Empty;
+            _personID = -1;
+            FirstName = String.Empty;
+            LastName = String.Empty;
+            Status = false;
+        }
 
-		public static void Delete(int salvationID)
-		{
-			(new SalvationData()).DeleteSalvation(salvationID);
-		}
 
-		private void LoadSalvation(SqlDataReader reader)
-		{
-			this.SalvationID = (int)reader["salvation_id"];
-			this._dateCreated = (DateTime)reader["date_created"];
-			this._dateModified = (DateTime)reader["date_modified"];
-			this._createdBy = reader["created_by"].ToString();
-			this._modifiedBy = reader["modified_by"].ToString();
-			this._personID = (int)reader["person_id"];
-			this.FirstName = reader["first_name"].ToString();
-			this.LastName = reader["last_name"].ToString();
-			this.Status = (bool)reader["status"];
-		}
+        /// <summary>
+        /// Load an existing Salvation record given it's unique ID number.
+        /// </summary>
+        /// <param name="salvationID">The ID number of the Salvation record to be loaded from the database.</param>
+        public Salvation(int salvationID) : this()
+        {
+            SqlDataReader reader = new SalvationData().GetSalvationByID(salvationID);
 
-		public void Save(string userID)
-		{
-			(new SalvationData()).SaveSalvation(this.SalvationID, this._personID, this.FirstName, this.LastName, this.Status, userID);
-		}
-	}
+
+            if (reader.Read())
+                LoadSalvation(reader);
+
+            reader.Close();
+        }
+
+
+        /// <summary>
+        /// Load an existing Salvation record with the data provided in the SqlDataReader.
+        /// </summary>
+        /// <param name="reader">The SqlDataReader that contains the columns to read from.</param>
+        public Salvation(SqlDataReader reader) : this()
+        {
+            LoadSalvation(reader);
+        }
+
+        #endregion
+
+
+        #region Public Methods
+
+        /// <summary>
+        /// Save all changes that have been made to this Salvation record.
+        /// </summary>
+        /// <param name="userID">The username of the logged in person doing the modification.</param>
+        public void Save(String userID)
+        {
+            new SalvationData().SaveSalvation(SalvationID,
+                _personID,
+                FirstName,
+                LastName,
+                Status,
+                userID);
+        }
+
+
+        /// <summary>
+        /// Delete the current Salvation record.
+        /// </summary>
+        public void Delete()
+        {
+            Salvation.Delete(SalvationID);
+            SalvationID = -1;
+        }
+
+
+        /// <summary>
+        /// Delete the specified Salvation record given it's ID number.
+        /// </summary>
+        /// <param name="salvationID">The ID number of the Salvation record to be deleted.</param>
+        public static void Delete(int salvationID)
+        {
+            new SalvationData().DeleteSalvation(salvationID);
+        }
+
+        #endregion
+
+
+        #region Private Methods
+
+        /// <summary>
+        /// Use the data in reader to fill in the fields for this object.
+        /// </summary>
+        /// <param name="reader">The SqlDataReader that contains the column information for the Salvation record.</param>
+        private void LoadSalvation(SqlDataReader reader)
+        {
+            SalvationID = (int)reader["salvation_id"];
+            _dateCreated = (DateTime)reader["date_created"];
+            _dateModified = (DateTime)reader["date_modified"];
+            _createdBy = reader["created_by"].ToString();
+            _modifiedBy = reader["modified_by"].ToString();
+            _personID = (int)reader["person_id"];
+            FirstName = reader["first_name"].ToString();
+            LastName = reader["last_name"].ToString();
+            Status = (Boolean)reader["status"];
+        }
+
+        #endregion
+    }
 }

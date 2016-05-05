@@ -1,98 +1,172 @@
-using Arena.DataLib;
-using System;
+﻿using System;
 using System.Collections;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
+using Arena.DataLib;
 
 namespace Arena.Custom.SOTHC.MiTM.DataLayer
 {
-	public class DedicationData : SqlData
-	{
-		public DedicationData()
-		{
-		}
+    /// <summary>
+    /// Data class for working with Dedication records in the database.
+    /// </summary>
+    public class DedicationData : SqlData
+    {
+        /// <summary>
+        /// Recommended Constructor.
+        /// </summary>
+        public DedicationData()
+        {
+        }
 
-		public void DeleteDedication(int dedicationID)
-		{
-			ArrayList arrayLists = new ArrayList();
-			arrayLists.Add(new SqlParameter("@DedicationID", (object)dedicationID));
-			base.ExecuteSqlDataReader("cust_sothc_mitm_sp_del_dedication", arrayLists);
-		}
 
-		public DataTable GetDedication_DT(int approvalStatus)
-		{
-			SqlConnection dbConnection = (new SqlDbConnection()).GetDbConnection();
-			SqlCommand sqlCommand = new SqlCommand();
-			StringBuilder stringBuilder = new StringBuilder();
-			SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
-			DataSet dataSet = new DataSet("Dedication");
-			stringBuilder.Append("SELECT * FROM cust_sothc_mitm_v_dedicationList");
-			stringBuilder.Append(" WHERE 1 = 1");
-			if (approvalStatus != -1)
-			{
-				stringBuilder.Append(" AND is_approved = @ApprovalStatus");
-			}
-			sqlCommand.CommandTimeout = 360;
-			sqlCommand.Connection = dbConnection;
-			sqlCommand.CommandType = CommandType.Text;
-			sqlCommand.CommandText = stringBuilder.ToString();
-			sqlCommand.Parameters.Add(new SqlParameter("@ApprovalStatus", (object)approvalStatus));
-			dbConnection.Open();
-			sqlDataAdapter.Fill(dataSet);
-			dbConnection.Close();
-			return dataSet.Tables[0];
-		}
+        /// <summary>
+        /// Retrieve a single Dedication record based on it's unique ID number.
+        /// </summary>
+        /// <param name="dedicationID">The dedication_id value of the record to retrieve.</param>
+        /// <returns>A SqlDataReader which identifies the record(s) that have been found in the database.</returns>
+        public SqlDataReader GetDedicationByID(int dedicationID)
+        {
+            ArrayList parms = new ArrayList();
 
-		public SqlDataReader GetDedicationByID(int dedicationID)
-		{
-			ArrayList arrayLists = new ArrayList();
-			arrayLists.Add(new SqlParameter("@DedicationID", (object)dedicationID));
-			return base.ExecuteSqlDataReader("cust_sothc_mitm_sp_get_dedication_byID", arrayLists);
-		}
 
-		public SqlDataReader GetDedicationBySeatPledgeID(int seatPledgeID)
-		{
-			ArrayList arrayLists = new ArrayList();
-			arrayLists.Add(new SqlParameter("@SeatPledgeID", (object)seatPledgeID));
-			return base.ExecuteSqlDataReader("cust_sothc_mitm_sp_get_dedication_bySeatPledgeID", arrayLists);
-		}
+            parms.Add(new SqlParameter("@DedicationID", dedicationID));
 
-		public SqlDataReader GetDedicationByUnapproved()
-		{
-			return base.ExecuteSqlDataReader("cust_sothc_mitm_sp_get_dedication_byUnapproved", new ArrayList());
-		}
+            return this.ExecuteSqlDataReader("cust_sothc_mitm_sp_get_dedication_byID", parms);
+        }
 
-		public int SaveDedication(int dedicationID, string approvedBy, int seatPledgeID, string dedicatedTo, string sponsoredBy, string biography, bool anonymous, int? blobID, string userID)
-		{
-			object value;
-			ArrayList arrayLists = new ArrayList();
-			SqlParameter sqlParameter = new SqlParameter();
-			arrayLists.Add(new SqlParameter("@DedicationID", (object)dedicationID));
-			arrayLists.Add(new SqlParameter("@ApprovedBy", approvedBy));
-			arrayLists.Add(new SqlParameter("@SeatPledgeID", (object)seatPledgeID));
-			arrayLists.Add(new SqlParameter("@DedicatedTo", dedicatedTo));
-			arrayLists.Add(new SqlParameter("@SponsoredBy", sponsoredBy));
-			arrayLists.Add(new SqlParameter("@Biography", biography));
-			arrayLists.Add(new SqlParameter("@Anonymous", (object)anonymous));
-			ArrayList arrayLists1 = arrayLists;
-			if (blobID.HasValue)
-			{
-				value = blobID.Value;
-			}
-			else
-			{
-				value = DBNull.Value;
-			}
-			arrayLists1.Add(new SqlParameter("@BlobID", value));
-			arrayLists.Add(new SqlParameter("@UserID", userID));
-			sqlParameter.ParameterName = "@ID";
-			sqlParameter.Direction = ParameterDirection.Output;
-			sqlParameter.SqlDbType = SqlDbType.Int;
-			arrayLists.Add(sqlParameter);
-			base.ExecuteNonQuery("cust_sothc_mitm_sp_save_dedication", arrayLists);
-			return (int)sqlParameter.Value;
-		}
-	}
+
+        /// <summary>
+        /// Retrieve a single Dedication record based on their seat_pledge_id value.
+        /// </summary>
+        /// <param name="seatPledgeID">The seat_pledge_id value of the records to retrieve.</param>
+        /// <returns>A SqlDataReader which identifies the record that has been found in the database.</returns>
+        public SqlDataReader GetDedicationBySeatPledgeID(int seatPledgeID)
+        {
+            ArrayList parms = new ArrayList();
+
+
+            parms.Add(new SqlParameter("@SeatPledgeID", seatPledgeID));
+
+            return this.ExecuteSqlDataReader("cust_sothc_mitm_sp_get_dedication_bySeatPledgeID", parms);
+        }
+
+
+        /// <summary>
+        /// Retrieve all the Dedication records that have not yet been approved.
+        /// </summary>
+        /// <returns>A SqlDataReader which identifies the record(s) that have been found in the database.</returns>
+        public SqlDataReader GetDedicationByUnapproved()
+        {
+            ArrayList parms = new ArrayList();
+
+
+            return this.ExecuteSqlDataReader("cust_sothc_mitm_sp_get_dedication_byUnapproved", parms);
+        }
+
+
+        /// <summary>
+        /// Retrieve a DataTable that contains a list of SQL rows with the results of the search.
+        /// </summary>
+        /// <param name="section">1 for only approved dedications, 0 for unapproved, -1 for all.</param>
+        /// <returns>A new DataTable reference.</returns>
+        public DataTable GetDedication_DT(int approvalStatus)
+        {
+            SqlConnection dbConnection = new SqlDbConnection().GetDbConnection();
+            SqlCommand select = new SqlCommand();
+            StringBuilder statement = new StringBuilder();
+            SqlDataAdapter adapter = new SqlDataAdapter(select);
+            DataSet dataSet = new DataSet("Dedication");
+
+
+            //
+            // Build up the SQL select statement.
+            //
+            statement.Append("SELECT * FROM cust_sothc_mitm_v_dedicationList");
+
+            //
+            // Build up the WHERE statement.
+            //
+            statement.Append(" WHERE 1 = 1");
+            if (approvalStatus != -1)
+                statement.Append(" AND is_approved = @ApprovalStatus");
+
+            //
+            // Setup the actual query to run.
+            //
+            select.CommandTimeout = 360;
+            select.Connection = dbConnection;
+            select.CommandType = CommandType.Text;
+            select.CommandText = statement.ToString();
+
+            //
+            // Add in all the parameters.
+            //
+            select.Parameters.Add(new SqlParameter("@ApprovalStatus", approvalStatus));
+
+            //
+            // Run the query.
+            //
+            dbConnection.Open();
+            adapter.Fill(dataSet);
+            dbConnection.Close();
+
+            return dataSet.Tables[0];
+        }
+
+
+        /// <summary>
+        /// Delete the identified Dedication record from the database.
+        /// </summary>
+        /// <param name="dedicationID">The record's dedication_id that the user wants to remove.</param>
+        public void DeleteDedication(int dedicationID)
+        {
+            ArrayList parms = new ArrayList();
+
+
+            parms.Add(new SqlParameter("@DedicationID", dedicationID));
+
+            this.ExecuteSqlDataReader("cust_sothc_mitm_sp_del_dedication", parms);
+        }
+
+
+        /// <summary>
+        /// Update or Create a single Dedication record in the database with the values from the parameters.
+        /// </summary>
+        /// <param name="dedicationID">The dedication_id of the record to update or -1 to create a new Dedication record.</param>
+        /// <param name="approvedBy">The username of the person who approved the Dedication, or String.Empty if it is not approved yet.</param>
+        /// <param name="seatPledgeID">The ID number of the SeatPledge to link this Dedication to.</param>
+        /// <param name="dedicatedTo">A short dedication message.</param>
+        /// <param name="sponsoredBy">The name of the person or company that sponsored the pledge.</param>
+        /// <param name="biography">A short biography of the pledge and why it was made.</param>
+        /// <param name="anonymous">Wether or not the pledger wishes to remain anonymous.</param>
+        /// <param name="blobID">The ID number of the blob which contains a picture for the Dedication, or -1 if no picture was uploaded.</param>
+        /// <param name="userID">The username of the person who is making this change.</param>
+        /// <returns>The ID number of the Dedication record that was created/updated.</returns>
+        public int SaveDedication(int dedicationID, String approvedBy, int seatPledgeID, String dedicatedTo, String sponsoredBy, String biography, Boolean anonymous, int? blobID, String userID)
+        {
+            ArrayList parms = new ArrayList();
+            SqlParameter parmOut = new SqlParameter();
+
+
+            parms.Add(new SqlParameter("@DedicationID", dedicationID));
+            parms.Add(new SqlParameter("@ApprovedBy", approvedBy));
+            parms.Add(new SqlParameter("@SeatPledgeID", seatPledgeID));
+            parms.Add(new SqlParameter("@DedicatedTo", dedicatedTo));
+            parms.Add(new SqlParameter("@SponsoredBy", sponsoredBy));
+            parms.Add(new SqlParameter("@Biography", biography));
+            parms.Add(new SqlParameter("@Anonymous", anonymous));
+            parms.Add(new SqlParameter("@BlobID", (blobID.HasValue ? (object)blobID.Value : DBNull.Value)));
+            parms.Add(new SqlParameter("@UserID", userID));
+
+            parmOut.ParameterName = "@ID";
+            parmOut.Direction = ParameterDirection.Output;
+            parmOut.SqlDbType = SqlDbType.Int;
+            parms.Add(parmOut);
+
+            this.ExecuteNonQuery("cust_sothc_mitm_sp_save_dedication", parms);
+
+            return (int)parmOut.Value;
+        }
+    }
 }
