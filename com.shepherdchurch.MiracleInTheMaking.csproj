@@ -93,7 +93,7 @@
   <ItemGroup>
     <Compile Include="Data\MiracleInTheMakingContext.cs" />
     <Compile Include="Data\MiracleIntheMakingService.cs" />
-    <Compile Include="Migrations\001_CreateDb_Seat.cs" />
+    <Compile Include="Migrations\001_CreateTable_Seat.cs" />
     <Compile Include="Model\Seat.cs" />
     <Compile Include="Model\SeatService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

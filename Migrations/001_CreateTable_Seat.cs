@@ -2,8 +2,8 @@
 
 namespace com.shepherdchurch.MiracleInTheMaking.Migrations
 {
-    [MigrationNumber(1, "1.0.0")]
-    public class CreateDb_Seat : Migration
+    [MigrationNumber(1, "1.4.0")]
+    public class CreateTable_Seat : Migration
     {
         /// <summary>
         /// The commands to run to migrate plugin to the specific version
@@ -20,7 +20,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Migrations
 	    [CreatedByPersonAliasId] [int] NULL,
 	    [ModifiedByPersonAliasId] [int] NULL,
 	    [ForeignId] [nvarchar](50) NULL,
-        CONSTRAINT [PK_dbo._com_shepherdchurch_SampleProject_ReferralAgency] PRIMARY KEY CLUSTERED 
+        CONSTRAINT [PK_dbo._com_shepherdchurch_MiracleInTheMaking_Seat] PRIMARY KEY CLUSTERED 
         (
 	        [Id] ASC
         ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON),
