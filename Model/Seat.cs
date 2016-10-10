@@ -14,7 +14,7 @@ using Rock.Model;
 namespace com.shepherdchurch.MiracleInTheMaking.Model
 {
     /// <summary>
-    /// A Referral Agency
+    /// A Seat as it exists in the building.
     /// </summary>
     [Table("_com_shepherdchurch_MiracleInTheMaking_Seat")]
     [DataContract]

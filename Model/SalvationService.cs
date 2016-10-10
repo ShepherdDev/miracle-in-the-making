@@ -6,13 +6,13 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
     /// <summary>
     /// 
     /// </summary>
-    public class SeatService : MiracleInTheMakingService<Seat>
+    public class SalvationService : MiracleInTheMakingService<Salvation>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SeatService"/> class.
+        /// Initializes a new instance of the <see cref="SalvationService"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        public SeatService(MiracleInTheMakingContext context) : base(context) { }
+        public SalvationService(MiracleInTheMakingContext context) : base(context) { }
 
     }
 }

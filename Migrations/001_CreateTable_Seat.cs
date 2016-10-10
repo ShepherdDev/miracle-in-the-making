@@ -10,7 +10,8 @@ namespace com.shepherdchurch.MiracleInTheMaking.Migrations
         /// </summary>
         public override void Up()
         {
-            Sql(@"CREATE TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Seat] (
+            Sql(@"
+    CREATE TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Seat] (
 	    [Id] [int] IDENTITY(1,1) NOT NULL,
         [Section] [nchar](1) NOT NULL,
         [SeatNumber] [int] NOT NULL,
@@ -29,7 +30,14 @@ namespace com.shepherdchurch.MiracleInTheMaking.Migrations
             [Section] ASC,
             [SeatNumber] ASC
         ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
-    )");
+    )
+    
+    ALTER TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Seat] WITH CHECK ADD CONSTRAINT [FK_dbo._com_shepherdchurch_MiracleInTheMaking_Seat_dbo.PersonAlias_CreatedByPersonAliasId] FOREIGN KEY([CreatedByPersonAliasId]) REFERENCES [dbo].[PersonAlias] ([Id])
+    ALTER TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Seat] CHECK CONSTRAINT [FK_dbo._com_shepherdchurch_MiracleInTheMaking_Seat_dbo.PersonAlias_CreatedByPersonAliasId]
+
+    ALTER TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Seat] WITH CHECK ADD CONSTRAINT [FK_dbo._com_shepherdchurch_MiracleInTheMaking_Seat_dbo.PersonAlias_ModifiedByPersonAliasId] FOREIGN KEY([ModifiedByPersonAliasId]) REFERENCES [dbo].[PersonAlias] ([Id])
+    ALTER TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Seat] CHECK CONSTRAINT [FK_dbo._com_shepherdchurch_MiracleInTheMaking_Seat_dbo.PersonAlias_ModifiedByPersonAliasId]
+    ");
         }
 
         /// <summary>
@@ -37,7 +45,11 @@ namespace com.shepherdchurch.MiracleInTheMaking.Migrations
         /// </summary>
         public override void Down()
         {
-            Sql(@"DROP TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Seat]");
+            Sql(@"
+    ALTER TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Seat] DROP CONSTRAINT [FK_dbo._com_shepherdchurch_MiracleInTheMaking_Seat_dbo.PersonAlias_ModifiedByPersonAliasId]
+    ALTER TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Seat] DROP CONSTRAINT [FK_dbo._com_shepherdchurch_MiracleInTheMaking_Seat_dbo.PersonAlias_CreatedByPersonAliasId]
+    DROP TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Seat]
+    ");
         }
     }
 }

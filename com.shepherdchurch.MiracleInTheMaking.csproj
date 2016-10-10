@@ -94,9 +94,13 @@
     <Compile Include="Data\MiracleInTheMakingContext.cs" />
     <Compile Include="Data\MiracleIntheMakingService.cs" />
     <Compile Include="Migrations\001_CreateTable_Seat.cs" />
+    <Compile Include="Migrations\002_CreateTable_Salvation.cs" />
+    <Compile Include="Model\Salvation.cs" />
+    <Compile Include="Model\SalvationService.cs" />
     <Compile Include="Model\Seat.cs" />
     <Compile Include="Model\SeatService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rest\SalvationsController.cs" />
     <Compile Include="Rest\SeatsController.cs" />
     <Compile Include="SystemGuid\DefinedType.cs" />
   </ItemGroup>
