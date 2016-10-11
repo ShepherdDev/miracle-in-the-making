@@ -12,7 +12,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Migrations
         {
             Sql(@"CREATE TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Salvation] (
 	    [Id] [int] IDENTITY(1,1) NOT NULL,
-	    [PersonAliasId] [int] NULL,
+	    [PersonAliasId] [int] NOT NULL,
         [FirstName] [nvarchar](100) NOT NULL,
         [LastName] [nvarchar](100) NOT NULL,
         [IsSaved] [bit] NOT NULL,
@@ -21,7 +21,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Migrations
 	    [ModifiedDateTime] [datetime] NULL,
 	    [CreatedByPersonAliasId] [int] NULL,
 	    [ModifiedByPersonAliasId] [int] NULL,
-	    [ForeignId] [nvarchar](50) NULL,
+	    [ForeignKey] [nvarchar](50) NULL,
         CONSTRAINT [PK_dbo._com_shepherdchurch_MiracleInTheMaking_Salvation] PRIMARY KEY CLUSTERED 
         (
 	        [Id] ASC

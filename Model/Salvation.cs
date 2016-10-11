@@ -72,7 +72,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
         /// Gets or sets the person alias this salvation belongs to.
         /// </summary>
         /// <value>
-        /// The campus.
+        /// The person alias.
         /// </value>
         public virtual PersonAlias PersonAlias { get; set; }
 
