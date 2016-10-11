@@ -95,12 +95,20 @@
     <Compile Include="Data\MiracleIntheMakingService.cs" />
     <Compile Include="Migrations\001_CreateTable_Seat.cs" />
     <Compile Include="Migrations\002_CreateTable_Salvation.cs" />
+    <Compile Include="Migrations\003_CreateTable_SeatPledge.cs" />
+    <Compile Include="Migrations\004_CreateTable_Dedication.cs" />
+    <Compile Include="Model\Dedication.cs" />
+    <Compile Include="Model\DedicationService.cs" />
     <Compile Include="Model\Salvation.cs" />
     <Compile Include="Model\SalvationService.cs" />
     <Compile Include="Model\Seat.cs" />
+    <Compile Include="Model\SeatPledge.cs" />
+    <Compile Include="Model\SeatPledgeService.cs" />
     <Compile Include="Model\SeatService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rest\DedicationsController.cs" />
     <Compile Include="Rest\SalvationsController.cs" />
+    <Compile Include="Rest\SeatPledgesController.cs" />
     <Compile Include="Rest\SeatsController.cs" />
     <Compile Include="SystemGuid\DefinedType.cs" />
   </ItemGroup>
