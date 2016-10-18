@@ -13,7 +13,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Migrations
             Sql(@"CREATE TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Dedication] (
 	    [Id] [int] IDENTITY(1,1) NOT NULL,
         [SeatPledgeId] [int] NOT NULL,
-	    [ApprovedBy] [nvarchar](100) NOT NULL,
+	    [ApprovedBy] [nvarchar](100) NULL,
         [DedicatedTo] [nvarchar](100) NOT NULL,
         [SponsoredBy] [nvarchar](100) NOT NULL,
         [Biography] [text] NOT NULL,
