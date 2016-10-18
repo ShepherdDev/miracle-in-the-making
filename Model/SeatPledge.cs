@@ -136,9 +136,9 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
         /// <value>
         /// The number of right arms
         /// </value>
-        [Required(ErrorMessage = "RequestedRightArm is required")]
+        [Required(ErrorMessage = "RequestedArmRight is required")]
         [DataMember(IsRequired = true)]
-        public int RequestedRightArm { get; set; }
+        public int RequestedArmRight { get; set; }
 
         #endregion
 
