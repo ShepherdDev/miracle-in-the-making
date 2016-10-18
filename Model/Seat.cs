@@ -48,6 +48,19 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
 
         #region Virtual Properties
 
+        /// <summary>
+        /// User friendly name of the Seat. Section letter combined with the seat number.
+        /// </summary>
+        [DataMember]
+        [NotMapped]
+        public virtual string FriendlyName
+        {
+            get
+            {
+                return string.Format( "{0}{1}", Section, SeatNumber );
+            }
+        }
+
         #endregion
 
     }
