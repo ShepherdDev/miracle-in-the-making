@@ -20,7 +20,9 @@ namespace com.shepherdchurch.MiracleInTheMaking.Migrations
 	    [ModifiedDateTime] [datetime] NULL,
 	    [CreatedByPersonAliasId] [int] NULL,
 	    [ModifiedByPersonAliasId] [int] NULL,
-	    [ForeignKey] [nvarchar](50) NULL,
+        [ForeignId] [int] NULL,
+	    [ForeignKey] [nvarchar](100) NULL,
+        [ForeignGuid] [uniqueidentifier] NULL,
         CONSTRAINT [PK_dbo._com_shepherdchurch_MiracleInTheMaking_Seat] PRIMARY KEY CLUSTERED 
         (
 	        [Id] ASC

@@ -10,7 +10,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Migrations
         /// </summary>
         public override void Up()
         {
-            Sql(@"CREATE TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_SeatPledge] (
+            Sql( @"CREATE TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_SeatPledge] (
 	    [Id] [int] IDENTITY(1,1) NOT NULL,
 	    [PledgedPersonAliasId] [int] NOT NULL,
         [Amount] [money] NOT NULL,
@@ -29,7 +29,9 @@ namespace com.shepherdchurch.MiracleInTheMaking.Migrations
 	    [ModifiedDateTime] [datetime] NULL,
 	    [CreatedByPersonAliasId] [int] NULL,
 	    [ModifiedByPersonAliasId] [int] NULL,
-	    [ForeignKey] [nvarchar](50) NULL,
+        [ForeignId] [int] NULL,
+	    [ForeignKey] [nvarchar](100) NULL,
+        [ForeignGuid] [uniqueidentifier] NULL,
         CONSTRAINT [PK_dbo._com_shepherdchurch_MiracleInTheMaking_SeatPledge] PRIMARY KEY CLUSTERED 
         (
 	        [Id] ASC
@@ -50,7 +52,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Migrations
 
     ALTER TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_SeatPledge] WITH CHECK ADD CONSTRAINT [FK_dbo._com_shepherdchurch_MiracleInTheMaking_SeatPledge_dbo.PersonAlias_ModifiedByPersonAliasId] FOREIGN KEY([ModifiedByPersonAliasId]) REFERENCES [dbo].[PersonAlias] ([Id])
     ALTER TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_SeatPledge] CHECK CONSTRAINT [FK_dbo._com_shepherdchurch_MiracleInTheMaking_SeatPledge_dbo.PersonAlias_ModifiedByPersonAliasId]
-    ");
+    " );
         }
 
         /// <summary>

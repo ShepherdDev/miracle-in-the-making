@@ -10,7 +10,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Migrations
         /// </summary>
         public override void Up()
         {
-            Sql(@"CREATE TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Salvation] (
+            Sql( @"CREATE TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Salvation] (
 	    [Id] [int] IDENTITY(1,1) NOT NULL,
 	    [PersonAliasId] [int] NOT NULL,
         [FirstName] [nvarchar](100) NOT NULL,
@@ -21,7 +21,9 @@ namespace com.shepherdchurch.MiracleInTheMaking.Migrations
 	    [ModifiedDateTime] [datetime] NULL,
 	    [CreatedByPersonAliasId] [int] NULL,
 	    [ModifiedByPersonAliasId] [int] NULL,
-	    [ForeignKey] [nvarchar](50) NULL,
+        [ForeignId] [int] NULL,
+	    [ForeignKey] [nvarchar](100) NULL,
+        [ForeignGuid] [uniqueidentifier] NULL,
         CONSTRAINT [PK_dbo._com_shepherdchurch_MiracleInTheMaking_Salvation] PRIMARY KEY CLUSTERED 
         (
 	        [Id] ASC
@@ -36,7 +38,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Migrations
 
     ALTER TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Salvation] WITH CHECK ADD CONSTRAINT [FK_dbo._com_shepherdchurch_MiracleInTheMaking_Salvation_dbo.PersonAlias_ModifiedByPersonAliasId] FOREIGN KEY([ModifiedByPersonAliasId]) REFERENCES [dbo].[PersonAlias] ([Id])
     ALTER TABLE [dbo].[_com_shepherdchurch_MiracleInTheMaking_Salvation] CHECK CONSTRAINT [FK_dbo._com_shepherdchurch_MiracleInTheMaking_Salvation_dbo.PersonAlias_ModifiedByPersonAliasId]
-    ");
+    " );
         }
 
         /// <summary>
