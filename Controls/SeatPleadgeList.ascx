@@ -8,13 +8,19 @@
 
             <div class="panel-body">
                 <Rock:GridFilter ID="gfSettings" runat="server">
-                    <Rock:CampusPicker ID="cpCampus" runat="server" Label="Campus" />
-                    <Rock:RockDropDownList ID="ddlAgencyType" runat="server" Label="Agency Type" />
+                    <Rock:RockTextBox ID="tbNameFilter" runat="server" Label="Name" />
+                    <Rock:RockDropDownList ID="ddlAssignedSectionFilter" runat="server" Label="Assigned Section" />
+                    <Rock:NumberBox ID="tbAssignedSeatFilter" runat="server" Label="Assigned Seat #" MinimumValue="-2147483648" MaximumValue="2147483647" NumberType="Integer" TextMode="Number" />
+                    <Rock:RockRadioButtonList ID="rblAssignedStatusFilter" runat="server" Label="Assigned Status">
+                        <asp:ListItem Value="0" Text="Both" />
+                        <asp:ListItem Value="1" Text="Assigned" />
+                        <asp:ListItem Value="2" Text="Unassigned" />
+                    </Rock:RockRadioButtonList>
                 </Rock:GridFilter>
 
                 <Rock:ModalAlert ID="mdGridWarning" runat="server" />
 
-                <Rock:Grid ID="gSeatPledges" runat="server" AllowSorting="true" OnRowSelected="gSeatPledges_Edit" TooltipField="Id">
+                <Rock:Grid ID="gSeatPledges" runat="server" AllowSorting="true" OnRowSelected="gSeatPledges_Edit" TooltipField="Id" PersonIdField="PledgedPersonAlias.PersonId">
                     <Columns>
                         <asp:BoundField DataField="PledgedPersonAlias.Person.FullNameReversed" HeaderText="Name" SortExpression="PledgedPersonAlias.Person.LastName,PledgedPersonAlias.Person.FirstName" />
                         <asp:BoundField DataField="Amount" DataFormatString="{0:C2}" HeaderText="Amount" SortExpression="Amount" />

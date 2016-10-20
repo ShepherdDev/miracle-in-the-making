@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 
 using com.shepherdchurch.MiracleInTheMaking.Data;
 using com.shepherdchurch.MiracleInTheMaking.Model;
@@ -27,7 +28,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         /// Raises the <see cref="E:System.Web.UI.Control.Init" /> event.
         /// </summary>
         /// <param name="e">An <see cref="T:System.EventArgs" /> object that contains the event data.</param>
-        protected void Page_Load( object sender, EventArgs e )
+        protected override void OnInit( EventArgs e )
         {
             base.OnInit( e );
 
@@ -43,6 +44,8 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
             gSeatPledges.RowItemText = "Seat Pledge";
             gSeatPledges.DataKeyNames = new string[] { "Id" };
             gSeatPledges.Actions.ShowAdd = canEdit;
+            gSeatPledges.Actions.ShowBulkUpdate = false;
+            gSeatPledges.Actions.ShowMergePerson = false;
             gSeatPledges.IsDeleteEnabled = canEdit;
             gSeatPledges.Actions.AddClick += gSeatPledges_Add;
             gSeatPledges.GridRebind += gSeatPledges_GridRebind;
@@ -60,8 +63,10 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
 
             if ( !Page.IsPostBack )
             {
-                cpCampus.SetValue( gfSettings.GetUserPreference( "Campus" ) );
-                ddlAgencyType.SelectedValue = gfSettings.GetUserPreference( "Agency Type" );
+                tbNameFilter.Text = gfSettings.GetUserPreference( "Name" );
+                ddlAssignedSectionFilter.SelectedValue = gfSettings.GetUserPreference( "Assigned Section" );
+                tbAssignedSeatFilter.Text = gfSettings.GetUserPreference( "Assigned Seat" );
+                rblAssignedStatusFilter.SelectedValue = gfSettings.GetUserPreference( "Assigned Status" );
 
                 BindGrid();
             }
@@ -87,8 +92,10 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected void gfSettings_ApplyFilterClick( object sender, EventArgs e )
         {
-            gfSettings.SaveUserPreference( "Campus", (cpCampus.SelectedCampusId != null ? cpCampus.SelectedCampusId.Value.ToString() : string.Empty) );
-            gfSettings.SaveUserPreference( "Agency Type", ddlAgencyType.SelectedValue );
+            gfSettings.SaveUserPreference( "Name", tbNameFilter.Text );
+            gfSettings.SaveUserPreference( "Assigned Section", ddlAssignedSectionFilter.SelectedValue );
+            gfSettings.SaveUserPreference( "Assigned Seat", tbAssignedSeatFilter.Text );
+            gfSettings.SaveUserPreference( "Assigned Status", rblAssignedStatusFilter.SelectedValue );
 
             BindGrid();
         }
@@ -102,26 +109,25 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         {
             switch ( e.Key )
             {
-                case "Campus":
-                    {
-                        if ( !string.IsNullOrWhiteSpace( e.Value ) )
-                        {
-                            e.Value = CampusCache.Read( int.Parse( e.Value ) ).Name;
-                        }
-                        break;
-                    }
+                case "Name":
+                case "Assigned Section":
+                case "Assigned Seat":
+                    break;
 
-                case "Agency Type":
+                case "Assigned Status":
                     {
-                        int? valueId = gfSettings.GetUserPreference( "Agency Type" ).AsIntegerOrNull();
-                        if ( valueId.HasValue )
+                        int? status = e.Value.AsIntegerOrNull();
+
+                        e.Value = string.Empty;
+                        if (status != null && status == 1)
                         {
-                            var definedValue = DefinedValueCache.Read( valueId.Value );
-                            if ( definedValue != null )
-                            {
-                                e.Value = definedValue.Value;
-                            }
+                            e.Value = "Assigned";
                         }
+                        else if (status != null && status == 2)
+                        {
+                            e.Value = "Unassigned";
+                        }
+
                         break;
                     }
 
@@ -200,15 +206,12 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         /// </summary>
         private void BindFilter()
         {
-            var campuses = CampusCache.All();
-            cpCampus.Campuses = campuses;
-            cpCampus.Visible = campuses.Any();
-
-            var definedType = DefinedTypeCache.Read( com.shepherdchurch.SampleProject.SystemGuid.DefinedType.REFERRAL_AGENCY_TYPE.AsGuid() );
-            if ( definedType != null )
-            {
-                ddlAgencyType.BindToDefinedType( definedType, true );
-            }
+            ddlAssignedSectionFilter.Items.Clear();
+            ddlAssignedSectionFilter.DataSource = new SeatService( new MiracleInTheMakingContext() ).Queryable().GroupBy( s => s.Section, (k, g) => new { Section = k } ).ToList();
+            ddlAssignedSectionFilter.DataTextField = "Section";
+            ddlAssignedSectionFilter.DataValueField = "Section";
+            ddlAssignedSectionFilter.DataBind();
+            ddlAssignedSectionFilter.Items.Insert( 0, new ListItem() );
         }
 
         /// <summary>
@@ -221,17 +224,36 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
 
             var qry = service.Queryable( "PledgedPersonAlias,RequestedSeat,AssignedSeat" );
 
-//            int? campusId = gfSettings.GetUserPreference( "Campus" ).AsIntegerOrNull();
-//            if ( campusId.HasValue )
-//            {
-//                qry = qry.Where( a => a.CampusId == campusId.Value );
-//            }
+            string nameFilter = gfSettings.GetUserPreference( "Name" );
+            if ( !string.IsNullOrEmpty( nameFilter ) )
+            {
+                qry = qry.Where( sp => sp.PledgedPersonAlias.Person.FirstName.Contains( nameFilter ) || sp.PledgedPersonAlias.Person.NickName.Contains( nameFilter ) || sp.PledgedPersonAlias.Person.LastName.Contains( nameFilter ) );
+            }
 
-//            int? definedValueId = gfSettings.GetUserPreference( "Agency Type" ).AsIntegerOrNull();
-//            if ( definedValueId.HasValue )
-//            {
-//                qry = qry.Where( a => a.AgencyTypeValueId == definedValueId.Value );
-//            }
+            string assignedSectionFilter = gfSettings.GetUserPreference( "Assigned Section" );
+            if ( !string.IsNullOrEmpty( assignedSectionFilter ) )
+            {
+                qry = qry.Where( sp => sp.AssignedSeat != null && sp.AssignedSeat.Section == assignedSectionFilter );
+            }
+
+            int? assignedSeatFilter = gfSettings.GetUserPreference( "Assigned Seat" ).AsIntegerOrNull();
+            if ( assignedSeatFilter != null )
+            {
+                qry = qry.Where( sp => sp.AssignedSeat != null && sp.AssignedSeat.SeatNumber == assignedSeatFilter );
+            }
+
+            int? assignedStatusFilter = gfSettings.GetUserPreference( "Assigned Status" ).AsIntegerOrNull();
+            if ( assignedStatusFilter != null )
+            {
+                if ( assignedStatusFilter == 1 )
+                {
+                    qry = qry.Where( sp => sp.AssignedSeat != null );
+                }
+                else if ( assignedStatusFilter == 2 )
+                {
+                    qry = qry.Where( sp => sp.AssignedSeat == null );
+                }
+            }
 
             // Sort results
             if ( sortProperty != null )
