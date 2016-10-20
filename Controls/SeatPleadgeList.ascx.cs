@@ -19,6 +19,8 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
     [DisplayName( "Seat Pledge List" )]
     [Category( "com_shepherdchurch > Miracle In The Making" )]
     [Description( "Lists all the seat pledges." )]
+    [LinkedPage( "Pledge Detail Page" )]
+    [LinkedPage( "Dedication Detail Page" )]
 
     public partial class SeatPleadgeList : Rock.Web.UI.RockBlock
     {
@@ -43,10 +45,10 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
 
             gSeatPledges.RowItemText = "Seat Pledge";
             gSeatPledges.DataKeyNames = new string[] { "Id" };
+            gSeatPledges.IsDeleteEnabled = canEdit;
             gSeatPledges.Actions.ShowAdd = canEdit;
             gSeatPledges.Actions.ShowBulkUpdate = false;
             gSeatPledges.Actions.ShowMergePerson = false;
-            gSeatPledges.IsDeleteEnabled = canEdit;
             gSeatPledges.Actions.AddClick += gSeatPledges_Add;
             gSeatPledges.GridRebind += gSeatPledges_GridRebind;
 
@@ -161,6 +163,18 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         }
 
         /// <summary>
+        /// Handles the LinkButton to edit a dedication in the gSeatPledges control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RowEventArgs"/> instance containing the event data.</param>
+        protected void gSeatPledges_EditDedication( object sender, RowEventArgs e )
+        {
+            Dedication dedication = new DedicationService( new MiracleInTheMakingContext() ).Queryable().Where( d => d.SeatPledgeId == e.RowKeyId ).First();
+
+            NavigateToDedicationDetailPage( dedication.Id );
+        }
+
+        /// <summary>
         /// Handles the Delete event of the gSeatPledges control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -271,14 +285,23 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         /// <summary>
         /// Navigates to detail page.
         /// </summary>
-        /// <param name="referralAgencyId">The referral agency identifier.</param>
-        private void NavigateToDetailPage( int referralAgencyId )
+        /// <param name="seatPledgeId">The seat pledge identifier.</param>
+        private void NavigateToDetailPage( int seatPledgeId )
         {
             var qryParams = new Dictionary<string, string>();
-            qryParams.Add( "referralAgencyId", referralAgencyId.ToString() );
-            qryParams.Add( "campusId", gfSettings.GetUserPreference( "Campus" ) );
-            qryParams.Add( "agencyTypeId", gfSettings.GetUserPreference( "Agency Type" ) );
+            qryParams.Add( "seatPledgeId", seatPledgeId.ToString() );
             NavigateToLinkedPage( "DetailPage", qryParams );
+        }
+
+        /// <summary>
+        /// Navigates to detail page.
+        /// </summary>
+        /// <param name="dedicationId">The seat pledge identifier.</param>
+        private void NavigateToDedicationDetailPage( int dedicationId )
+        {
+            var qryParams = new Dictionary<string, string>();
+            qryParams.Add( "dedicationId", dedicationId.ToString() );
+            NavigateToLinkedPage( "DedicationDetailPage", qryParams );
         }
 
         #endregion

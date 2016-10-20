@@ -26,6 +26,7 @@
                         <asp:BoundField DataField="Amount" DataFormatString="{0:C2}" HeaderText="Amount" SortExpression="Amount" />
                         <asp:BoundField DataField="AssignedSeat.FriendlyName" HeaderText="Assigned Seat" SortExpression="AssignedSeat.Section,AssignedSeat.SeatNumber" />
                         <asp:BoundField DataField="RequestedSeat.FriendlyName" HeaderText="Requested Seat" SortExpression="RequestedSeat.Section,RequestedSeat.SeatNumber" />
+                        <Rock:LinkButtonField HeaderText="Dedication" HeaderStyle-HorizontalAlign="Center" CssClass="btn btn-default btn-sm fa fa-file-text-o" OnClick="gSeatPledges_EditDedication" />
                         <Rock:DeleteField OnClick="gSeatPledges_Delete" />
                     </Columns>
                 </Rock:Grid>
