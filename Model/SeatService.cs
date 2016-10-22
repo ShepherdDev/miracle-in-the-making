@@ -31,9 +31,8 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
                 .Where( sp => sp.Id != seatPledgeId );
 
             var result = Queryable()
-                .Join( qrySeatPledges, s => s.Id, sp => sp.AssignedSeatId, ( s, sp ) => new { Seat = s, Amount = sp.Amount } )
-                .GroupBy( o => o.Seat, ( key, g ) => new { Seat = key, Amount = g.Sum( o => o.Amount ) + amountNeeded } )
-                .Where( o => o.Amount < 10000 )
+                .GroupJoin( qrySeatPledges, s => s.Id, sp => sp.AssignedSeatId, ( s, sp ) => new { Seat = s, Amount = (sp.Sum( x => (decimal?)x.Amount ) ?? 0) + amountNeeded } )
+                .Where( o => o.Amount <= 10000 )
                 .OrderBy( o => o.Seat.Section )
                 .ThenBy( o => o.Seat.SeatNumber )
                 .FirstOrDefault();
