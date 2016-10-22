@@ -19,8 +19,8 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
     [DisplayName( "Seat Pledge List" )]
     [Category( "com_shepherdchurch > Miracle In The Making" )]
     [Description( "Lists all the seat pledges." )]
-    [LinkedPage( "Pledge Detail Page" )]
-    [LinkedPage( "Dedication Detail Page" )]
+    [LinkedPage( "Pledge Detail Page", "The page the user will be taken to when clicking on a row to edit the pledge." )]
+    [LinkedPage( "Dedication Detail Page", "The page the user will be taken to when clicking on the dedication button." )]
 
     public partial class SeatPleadgeList : Rock.Web.UI.RockBlock
     {
@@ -290,7 +290,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         {
             var qryParams = new Dictionary<string, string>();
             qryParams.Add( "seatPledgeId", seatPledgeId.ToString() );
-            NavigateToLinkedPage( "DetailPage", qryParams );
+            NavigateToLinkedPage( "PledgeDetailPage", qryParams );
         }
 
         /// <summary>
