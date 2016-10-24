@@ -71,6 +71,7 @@
       <HintPath>..\packages\System.Spatial.5.6.3\lib\net40\System.Spatial.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
       <Private>True</Private>
@@ -111,6 +112,7 @@
     <Compile Include="Rest\SeatPledgesController.cs" />
     <Compile Include="Rest\SeatsController.cs" />
     <Compile Include="SystemGuid\DefinedType.cs" />
+    <Compile Include="UI\TextBox.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
