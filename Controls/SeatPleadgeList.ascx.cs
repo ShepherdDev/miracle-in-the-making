@@ -51,6 +51,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
             gSeatPledges.Actions.ShowMergePerson = false;
             gSeatPledges.Actions.AddClick += gSeatPledges_Add;
             gSeatPledges.GridRebind += gSeatPledges_GridRebind;
+            gSeatPledges.RowDataBound += gSeatPledges_RowDataBound;
 
             BindFilter();
         }
@@ -169,9 +170,10 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         /// <param name="e">The <see cref="RowEventArgs"/> instance containing the event data.</param>
         protected void gSeatPledges_EditDedication( object sender, RowEventArgs e )
         {
-            Dedication dedication = new DedicationService( new MiracleInTheMakingContext() ).Queryable().Where( d => d.SeatPledgeId == e.RowKeyId ).First();
-
-            NavigateToDedicationDetailPage( dedication.Id );
+            //
+            // Dedications are edited by passing the seat pledge ID.
+            //
+            NavigateToDedicationDetailPage( e.RowKeyId );
         }
 
         /// <summary>
@@ -209,6 +211,32 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         protected void gSeatPledges_GridRebind( object sender, EventArgs e )
         {
             BindGrid();
+        }
+
+        protected void gSeatPledges_RowDataBound( object sender, GridViewRowEventArgs e )
+        {
+            if ( e.Row.RowType == DataControlRowType.DataRow )
+            {
+                SeatPledge seatPledge = ( SeatPledge )e.Row.DataItem;
+
+                if ( !IsUserAuthorized( Rock.Security.Authorization.EDIT ) || !seatPledge.Dedications.Any() )
+                {
+                    var lb = e.Row.Cells.Cast<DataControlFieldCell>()
+                        .Where( c => c.ContainingField.HeaderText == "Dedication" ).FirstOrDefault()
+                        .ControlsOfTypeRecursive<LinkButton>().FirstOrDefault();
+
+                    lb.Visible = false;
+                }
+
+                if ( !IsUserAuthorized( Rock.Security.Authorization.EDIT ) )
+                {
+                    var lb = e.Row.Cells.Cast<DataControlFieldCell>()
+                        .Where( c => c.ContainingField.GetType() == typeof(DeleteField) ).FirstOrDefault()
+                        .ControlsOfTypeRecursive<LinkButton>().FirstOrDefault();
+
+                    lb.Visible = false;
+                }
+            }
         }
 
         #endregion
@@ -279,6 +307,13 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
                 gSeatPledges.DataSource = qry.OrderBy( sp => sp.PledgedPersonAlias.Person.LastName ).ThenBy( sp => sp.PledgedPersonAlias.Person.FirstName ).ToList();
             }
 
+            //
+            // Disable columns if we don't have edit access.
+            //
+            bool readOnly = !IsUserAuthorized( Rock.Security.Authorization.EDIT );
+            gSeatPledges.Columns.Cast<DataControlField>().Where( f => f.HeaderText == "Dedication" ).FirstOrDefault().Visible = !readOnly;
+            gSeatPledges.Columns.Cast<DataControlField>().Where( f => f.GetType() == typeof( DeleteField ) ).FirstOrDefault().Visible = !readOnly;
+
             gSeatPledges.DataBind();
         }
 
@@ -300,7 +335,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         private void NavigateToDedicationDetailPage( int dedicationId )
         {
             var qryParams = new Dictionary<string, string>();
-            qryParams.Add( "dedicationId", dedicationId.ToString() );
+            qryParams.Add( "seatPledgeId", dedicationId.ToString() );
             NavigateToLinkedPage( "DedicationDetailPage", qryParams );
         }
 
