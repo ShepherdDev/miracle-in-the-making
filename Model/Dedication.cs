@@ -158,7 +158,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
         /// </summary>
         public DedicationConfiguration()
         {
-            this.HasRequired(r => r.SeatPledge).WithMany().HasForeignKey(p => p.SeatPledgeId).WillCascadeOnDelete(true);
+            this.HasRequired(r => r.SeatPledge).WithMany(sp => sp.Dedications).HasForeignKey(p => p.SeatPledgeId).WillCascadeOnDelete(true);
             this.HasOptional(r => r.BinaryFile).WithMany().HasForeignKey(p => p.BinaryFileId).WillCascadeOnDelete(false);
         }
     }

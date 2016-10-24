@@ -168,6 +168,19 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
         /// </value>
         public virtual Seat RequestedSeat { get; set; }
 
+        /// <summary>
+        /// Gets or sets a collection containing the <see cref="Dedication">Dedications</see> associated with this SeatPledge.
+        /// </summary>
+        /// <value>
+        /// The <see cref="Dedication">Dedications</see> for this SeatPledge.
+        /// </value>
+        public virtual ICollection<Dedication> Dedications
+        {
+            get { return _dedications ?? (_dedications = new Collection<Dedication>()); }
+            set { _dedications = value; }
+        }
+        private ICollection<Dedication> _dedications;
+
         #endregion
 
     }
