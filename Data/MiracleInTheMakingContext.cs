@@ -16,6 +16,12 @@ namespace com.shepherdchurch.MiracleInTheMaking.Data
 
         public DbSet<Seat> Seats { get; set; }
 
+        public DbSet<SeatPledge> SeatPledges { get; set; }
+
+        public DbSet<Salvation> Salvations { get; set; }
+
+        public DbSet<Dedication> Dedications { get; set; }
+
         #endregion
 
         /// <summary>

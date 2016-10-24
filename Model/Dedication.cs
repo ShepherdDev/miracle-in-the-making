@@ -49,7 +49,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
         /// Gets or sets the name of the person being dedicated to.
         /// </summary>
         /// <value>
-        /// The name
+        /// The name being dedicated to
         /// </value>
         [MaxLength(100)]
         [Required(ErrorMessage = "DedicatedTo is required")]
@@ -60,12 +60,21 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
         /// Gets or sets the name of the person who sponsored this dedication.
         /// </summary>
         /// <value>
-        /// The name
+        /// The name of the sponsor
         /// </value>
         [MaxLength(100)]
         [Required(ErrorMessage = "SponsoredBy is required")]
         [DataMember(IsRequired = true)]
         public string SponsoredBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the anonymous flag.
+        /// </summary>
+        /// <value>
+        /// The anonymity flag
+        /// </value>
+        [DataMember]
+        public bool IsAnonymous { get; set; }
 
         /// <summary>
         /// Gets or sets the biography to display with this dedication.
@@ -164,5 +173,4 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
     }
 
     #endregion
-
 }
