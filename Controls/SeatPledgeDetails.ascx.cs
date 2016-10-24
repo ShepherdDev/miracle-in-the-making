@@ -149,6 +149,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
                 if ( seatPledge != null )
                 {
                     crumbName = seatPledge.PledgedPersonAlias.Person.FullName;
+                    pageReference.Parameters.Add( "seatPledgeId", seatPledgeId.ToString() );
                 }
             }
 
