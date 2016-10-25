@@ -1,0 +1,395 @@
+﻿
+// Load Master Styles
+// -------------------------
+@import "../../../Styles/Bootstrap/variables.less";
+@import "../../../Styles/_rock-core.less";
+@import "../../../Styles/_store.less";
+@import "../../../Styles/_rock-variables.less";
+@import "_variables.less";
+@import "_variable-overrides.less";
+@import "_print.less";
+
+
+/*
+    Rock Theme Styles
+
+    1. HTML Overrides
+    2. Bootstrap Overides
+    3. Theme Styling
+    4. Responsive Overrides
+
+*/
+
+// 1. HTML Overrides
+// -------------------------
+
+html {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+	background: #4180CF url(https://www.miracleinthemaking.com/Images/miracleinthemaking/MITM_bg.jpg) no-repeat center top;
+	font: 12px "Lucida Grande", "Trebuchet MS", Arial, Helvetica, sans-serif;
+	text-align: justify;
+	color: #3f3b4d;
+	padding: 0px;
+	margin: 0px;
+}
+
+main {
+    h1:empty {
+        display: none;
+    }
+
+    display: block;
+    background-color: @body-bg;
+    .border-bottom-radius( @border-radius-large );
+    padding-top: @padding-large-vertical;
+    padding-bottom: @padding-large-vertical;
+}
+
+// 2. Bootstrap Overrides
+// -------------------------
+
+.navbar {
+    position: static; // default is relative which causes the dropdowns to go under the other navbars dispite having a higher z-index - JME 9/9/2013
+    // using fontawesome nav toggle button instead of the BS default
+    .navbar-toggle {
+        padding: 6px 10px;
+
+        i.fa-bars {
+            color: @navbar-inverse-toggle-icon-bar-bg;
+        }
+    }
+}
+
+a:hover i.fs {
+    text-decoration: none;
+}
+
+// 3. Theme Styling
+// -------------------------
+
+.page-icon {
+    display: none;
+}
+
+header {
+    .login-status {
+        float: right;
+    }
+
+    .navbar {
+        .border-top-radius( @border-radius-large );
+        .border-bottom-radius( 0px );
+        background-color: @nav-bg;
+        border: 0px;
+        margin-bottom: 0px;
+        font: 18px Rockwell, "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
+        color: #4180cf;
+        font-weight: bold;
+        text-align: center;
+        text-transform: uppercase;
+        padding-top: 10px;
+        padding-bottom: 20px;
+    }
+
+    .header-content {
+        margin-top: 10px;
+
+        background-image: url(https://www.miracleinthemaking.com/Images/miracleinthemaking/MITM_header.png);
+        background-repeat: no-repeat;
+        background-position: center top;
+    }
+}
+
+ul.navbar-nav1 {
+    li {
+        margin: 0 5px;
+        padding: 0 0 8px;
+        float: left;
+        position: relative;
+        list-style: none;
+        z-index:1000;
+    }
+
+    /* main level link */
+    a {
+        text-transform: uppercase;
+
+    	font-weight: bold;
+        color: #4180cf;
+        text-decoration: none;
+        display: block;
+        padding:  4px 20px;
+        margin: 0;
+        .borderRadius( 1.6em );
+	    z-index:1000;
+    }
+
+    .giving a {
+        text-transform: uppercase;
+
+        font-weight: bold;
+        color: #a2ab4b;
+        text-decoration: none;
+        display: block;
+        padding:  4px 20px;
+        margin: 0;
+        .borderRadius( 1.6em );
+
+	    z-index:1000;
+    }
+
+    /* main level link hover */
+    .current a, li:hover > a {
+	    color:  #4180cf;
+        z-index:1000;
+    }
+
+    li.giving:hover > a {
+	    color: #a2ab4b;
+        z-index:1000;
+    }
+
+    /* sub levels link hover */
+    li:hover li a {
+	    font: 12px "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
+        text-transform: none;
+        font-weight: normal;
+
+        background: none;
+        border: none;
+        color: #fff;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+        z-index:1000;
+    }
+
+    /* level 2 list */
+    ul {
+        li:hover a {
+	        font: 12px "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
+            text-transform: none;
+            font-weight: normal;
+
+            background: none;
+            border: none;
+            color: #fff;
+            .box-shadow( none );
+            text-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+            z-index:1000;
+        }
+
+        a:hover {
+	        background: #5e91cc !important;
+
+            color: #fff !important;
+            .borderRadius( 0px );
+            text-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+            z-index:1000;
+        }
+
+        li {
+            a {
+                padding: 8px;
+            }
+
+	        float: none;
+            margin: 0;
+	        padding: 0;
+        }
+
+        a {
+            font-weight: bold;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, .9);
+        }
+
+        /* rounded corners for first and last child */
+        li:first-child > a {
+            .border-top-radius( 9px );
+        }
+        li:last-child > a {
+            .border-bottom-radius( 9px );
+        }
+
+        /* level 3+ list */
+        ul {
+            left: 146px;
+            top: -3px;
+
+            background: #5e91cc;
+        }
+        ul a:hover {
+            background: #477fc1 !important;
+
+            color: #fff !important;
+            .borderRadius( 0px );
+            text-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+        }
+
+        background: #477fc1;
+        display: none;
+        margin: 0;
+        padding: 0;
+        width: 150px;
+        position: absolute;
+        top: 30px;
+        left: -23px;
+        border: none;
+        .borderRadius( 5px );
+        .box-shadow( 0 1px 3px rgba(0, 0, 0, .3) );
+    }
+
+    /* dropdown */
+    li:hover > ul {
+	    display: block;
+    }
+
+    display: inline-block;
+    margin: 0;
+    padding: 0px 6px 0px 40px;
+    line-height: 100%;
+    z-index:1000;
+}
+
+    .arrow-up {
+        border-color:transparent transparent #477fc1;
+        border-style:solid;
+        border-width:0 5px 5px;
+        float:left;
+        height:0;
+        margin:-5px 0 0 70px;
+        width:0;
+    }
+
+/* clearfix */
+ul.navbar-nav1:after {
+    content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+
+
+
+// homepage items
+#announcement-rotator {
+    margin: 0 -@grid-gutter-width/2 @spacing-lg-px;
+
+    .item {
+        img {
+            width: 100%;
+        }
+    }
+}
+
+.announcement-list {
+    .announcement {
+        margin: 0 auto @spacing-lg-px;
+        max-width: 390px;
+    }
+
+    .announcement-title {
+        margin: @spacing-sm-px 0;
+    }
+
+    img {
+        width: 100%;
+    }
+}
+
+.announcement-detail {
+    img {
+        width: 100%;
+    }
+}
+
+.nav-sub {
+    li {
+        border: 1px solid @gray-lighter;
+        border-radius: @border-radius-base;
+    }
+}
+
+footer {
+    margin-bottom: 50px;
+
+    .footer-message {
+        float: left;
+    }
+
+    .footer-address {
+        float: right;
+    }
+}
+
+#splash.error {
+    background-color: @gray-lighter;
+
+    #content {
+        margin-top: 20px;
+        background-color: @body-bg;
+        border-radius: @border-radius-base;
+        padding: 20px;
+    }
+}
+
+.not-found h2 {
+    font-size: 200px;
+    font-weight: @font-weight-bold;
+    letter-spacing: -5px;
+    line-height: 210px;
+
+    i {
+        color: #F03;
+        font-size: 210px;
+        position: relative;
+        top: -12px;
+    }
+}
+
+/* hide block panels */
+.panel.panel-block {
+    border: 0;
+    box-shadow: none;
+
+    & > .panel-heading {
+        display: none;
+    }
+
+    & > .panel-body {
+        padding: 0;
+
+        .grid.grid-panel {
+            margin: 0;
+        }
+    }
+}
+
+// 4. Responsive Overrides
+// -------------------------
+
+// default styling should be for phones 767px or less
+
+// Small devices (tablets, 768px and up)
+@media (min-width: @screen-sm-min) {
+    #announcement-rotator {
+        margin: @spacing-lg-px 0;
+    }
+}
+
+// Medium devices (desktops, 992px and up)
+@media (min-width: @screen-md-min) {
+}
+
+// Large devices (large desktops, 1200px and up)
+@media (min-width: @screen-lg-min) {
+}
+
+
+@import "_css-overrides.less";

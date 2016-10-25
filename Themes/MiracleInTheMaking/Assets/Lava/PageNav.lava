@@ -1,0 +1,37 @@
+{% if Page.DisplayChildPages == 'true' and Page.Pages != empty %}
+    <ul class="navbar-nav1">
+		{% for childPage in Page.Pages %}
+            {% if childPage.Current == 'true' %}
+				<li class="current">
+			{% else %}
+				<li>
+			{% endif %}
+				<a href="{{ childPage.Url }}">
+					<i class="{{ childPage.IconCssClass }}"></i>
+					{{ childPage.Title }}
+				</a>
+				{% if childPage.DisplayChildPages == 'true' and childPage.Pages != empty %}
+                    <ul>
+						{% for grandchildPage in childPage.Pages %}
+                            <li>
+								{% if forloop.first %}
+		                            <div class="arrow-up"></div>
+								{% endif %}
+								<a href="{{ grandchildPage.Url}} ">{{ grandchildPage.Title }}</a>
+								{% if grandchildPage.DisplayChildPages == 'true' %}
+									<ul>
+										{% for greatgrandchildPage in grandchildPage.Pages %}
+											<li>
+												<a href="{{ greatgrandchildPage.Url }}">{{ greatgrandchildPage.Title }}</a>
+											</li>
+										{% endfor %}
+									</ul>
+								{% endif %}
+							</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
