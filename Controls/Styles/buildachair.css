@@ -1,0 +1,43 @@
+﻿.facheckbox {
+    cursor: pointer;
+}
+.facheckbox .fa-fw {
+    text-align: left;
+}
+
+.mitm-buttons {
+    margin-top: 15px;
+    text-align: right;
+}
+
+table.mitm-bac thead tr th, table.mitm-bac tbody tr td, table.mitm-bac tfoot tr td {
+    font-size: 1.5em;
+}
+table.mitm-bac tr td:last-child {
+    width: 33%;
+}
+@media screen and (min-width: 480px) {
+    table.mitm-bac thead tr th, table.mitm-bac tbody tr td, table.mitm-bac tfoot tr td {
+        font-size: 2em;
+    }
+
+    table.mitm-bac tr td:last-child {
+        width: 25%;
+    }
+}
+
+table.mitm-bac tr.disabled td {
+    color: gray;
+}
+
+table.mitm-bac tr.disabled .facheckbox {
+    cursor: not-allowed;
+}
+
+table.mitm-bac tfoot td:first-child {
+    text-align: right;
+}
+
+table.mitm-bac tfoot td:last-child {
+    font-weight: bold;
+}
