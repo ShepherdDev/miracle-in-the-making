@@ -35,6 +35,7 @@
         // Set the total amount.
         //
         $('table.mitm-bac tfoot td:last span').text('$' + amount.formatMoney(0, '.', ','));
+        $('table.mitm-bac tfoot td:last input').val(amount);
         if (amount > 0) {
             $('table.mitm-bac tfoot td:last').removeClass('danger').addClass('success');
             $('.mitm-bac-submit').prop('disabled', false);

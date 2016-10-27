@@ -90,6 +90,52 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         protected void btnSubmit_Click( object sender, EventArgs e )
         {
+            Dictionary<string, string> query = new Dictionary<string, string>();
+            string choices = string.Empty;
+
+            if ( cbFullSeat.Checked )
+            {
+                choices += ",full";
+            }
+            if ( cbBackRest.Checked )
+            {
+                choices += ",back";
+            }
+            if ( cbLeg1.Checked )
+            {
+                choices += ",leg1";
+            }
+            if ( cbLeg2.Checked )
+            {
+                choices += ",leg2";
+            }
+            if ( cbLeg3.Checked )
+            {
+                choices += ",leg3";
+            }
+            if ( cbLeg4.Checked )
+            {
+                choices += ",leg4";
+            }
+            if ( cbArmLeft.Checked )
+            {
+                choices += ",armleft";
+            }
+            if ( cbArmRight.Checked )
+            {
+                choices += ",armright";
+            }
+
+            if ( choices.Length > 0 )
+            {
+                choices = choices.Substring( 1 );
+            }
+
+            query.Add( "seatId", PageParameter( "seatId" ) );
+            query.Add( "amount", hfTotal.Value );
+            query.Add( "choices", choices );
+
+            NavigateToLinkedPage( "DedicationDetails", query );
         }
 
         #endregion
