@@ -7,7 +7,7 @@
         <Rock:NotificationBox ID="nbEditModeMessage" runat="server" NotificationBoxType="Info" />
         <Rock:NotificationBox ID="nbInfoMessage" runat="server" NotificationBoxType="Info" />
 
-        <asp:Panel ID="pnlDetails" runat="server" CssClass="panel panel-block" Visible="false">
+        <asp:Panel ID="pnlDetails" runat="server" CssClass="panel panel-block mitm-dedication-details" Visible="false">
             <asp:HiddenField ID="hfDedicationId" runat="server" />
 
             <div class="panel-heading">
@@ -42,13 +42,13 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <Rock:RockCheckBox ID="cbAnonymous" runat="server" Label="Remain Anonymous" />
+                                <Rock:RockCheckBox ID="cbAnonymous" runat="server" Label="Remain Anonymous" SelectedIconCssClass="fa fa-check-square-o fa-lg" UnSelectedIconCssClass="fa fa-square-o fa-lg" />
                             </div>
                         </div>
 
                         <asp:Panel ID="pnlApproved" runat="server" CssClass="row" Visible="false">
                             <div class="col-md-12">
-                                <Rock:RockCheckBox ID="cbApproved" runat="server" Label="Approved" />
+                                <Rock:RockCheckBox ID="cbApproved" runat="server" Label="Approved" SelectedIconCssClass="fa fa-check-square-o fa-2x" UnSelectedIconCssClass="fa fa-square-o fa-2x" />
                             </div>
                         </asp:Panel>
                     </div>
@@ -57,12 +57,12 @@
                     </div>
                 </div>
 
-                <div class="actions">
+                <div class="mitm-buttons">
                     <asp:LinkButton ID="btnSave" runat="server" Text="Save" CssClass="btn btn-primary" OnClick="btnSave_Click" />
                     <asp:LinkButton ID="btnCancel" runat="server" Text="Cancel" CssClass="btn btn-link" CausesValidation="false" OnClick="btnCancel_Click" />
                 </div>
 
-                <div id="divAdminActions" runat="server" Visible="false" style="margin-top: 15px;">
+                <div id="divAdminActions" runat="server" Visible="false" class="mitm-buttons">
                     <asp:LinkButton ID="btnTestAdminEmail" runat="server" Text="Test Admin Email" CssClass="btn btn-default" OnClick="btnTestAdminEmail_Click" />
                     <asp:LinkButton ID="btnTestConfirmationEmail" runat="server" Text="Test Confirmation Email" CssClass="btn btn-default" OnClick="btnTestConfirmationEmail_Click" />
                 </div>

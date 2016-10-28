@@ -53,6 +53,8 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         {
             base.OnInit( e );
 
+            RockPage.AddCSSLink( ResolveUrl( "~/Plugins/com_shepherdchurch/MiracleInTheMaking/Styles/mitm.css" ) );
+
             //
             // This event gets fired after block settings are updated. it's nice to repaint the
             // screen if these settings would alter it.
