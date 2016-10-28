@@ -27,64 +27,64 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        <input type="checkbox" class="facheckbox" id="cbFullSeat" runat="server" data-amount="10000" />
-                                        <label for="<%= cbFullSeat.ClientID %>">Full Seat</label>
+                                        <Rock:RockCheckBox ID="cbFullSeat" runat="server" ContainerCssClass="inline-block" SelectedIconCssClass="fa fa-fw fa-check-square-o" UnSelectedIconCssClass="fa fa-fw fa-square-o" />
+                                        <span>Full Seat</span>
                                     </td>
                                     <td>$10,000</td>
                                 </tr>
 
                                 <tr>
                                     <td>
-                                        <input type="checkbox" class="facheckbox" id="cbBackRest" runat="server" data-amount="5000" />
-                                        <label for="<%= cbBackRest.ClientID %>">Back Rest</label>
+                                        <Rock:RockCheckBox ID="cbBackRest" runat="server" ContainerCssClass="inline-block" SelectedIconCssClass="fa fa-fw fa-check-square-o" UnSelectedIconCssClass="fa fa-fw fa-square-o" />
+                                        <span>Back Rest</span>
                                     </td>
                                     <td>$5,000</td>
                                 </tr>
 
                                 <tr>
                                     <td>
-                                        <input type="checkbox" class="facheckbox" id="cbLeg1" runat="server" data-amount="1000" />
-                                        <label for="<%= cbLeg1.ClientID %>">Leg 1</label>
+                                        <Rock:RockCheckBox ID="cbLeg1" runat="server" ContainerCssClass="inline-block" SelectedIconCssClass="fa fa-fw fa-check-square-o" UnSelectedIconCssClass="fa fa-fw fa-square-o" />
+                                        <span>Leg 1</span>
                                     </td>
                                     <td>$1,000</td>
                                 </tr>
 
                                 <tr>
                                     <td>
-                                        <input type="checkbox" class="facheckbox" id="cbLeg2" runat="server" data-amount="1000" />
-                                        <label for="<%= cbLeg2.ClientID %>">Leg 2</label>
+                                        <Rock:RockCheckBox ID="cbLeg2" runat="server" ContainerCssClass="inline-block" SelectedIconCssClass="fa fa-fw fa-check-square-o" UnSelectedIconCssClass="fa fa-fw fa-square-o" />
+                                        <span>Leg 2</span>
                                     </td>
                                     <td>$1,000</td>
                                 </tr>
 
                                 <tr>
                                     <td>
-                                        <input type="checkbox" class="facheckbox" id="cbLeg3" runat="server" data-amount="1000" />
-                                        <label for="<%= cbLeg3.ClientID %>">Leg 3</label>
+                                        <Rock:RockCheckBox ID="cbLeg3" runat="server" ContainerCssClass="inline-block" SelectedIconCssClass="fa fa-fw fa-check-square-o" UnSelectedIconCssClass="fa fa-fw fa-square-o" />
+                                        <span>Leg 3</span>
                                     </td>
                                     <td>$1,000</td>
                                 </tr>
 
                                 <tr>
                                     <td>
-                                        <input type="checkbox" class="facheckbox" id="cbLeg4" runat="server" data-amount="1000" />
-                                        <label for="<%= cbLeg4.ClientID %>">Leg 4</label>
+                                        <Rock:RockCheckBox ID="cbLeg4" runat="server" ContainerCssClass="inline-block" SelectedIconCssClass="fa fa-fw fa-check-square-o" UnSelectedIconCssClass="fa fa-fw fa-square-o" />
+                                        <span>Leg 4</span>
                                     </td>
                                     <td>$1,000</td>
                                 </tr>
 
                                 <tr>
                                     <td>
-                                        <input type="checkbox" class="facheckbox" id="cbArmLeft" runat="server" data-amount="500" />
-                                        <label for="<%= cbArmLeft.ClientID %>">Left Arm</label>
+                                        <Rock:RockCheckBox ID="cbArmLeft" runat="server" ContainerCssClass="inline-block" SelectedIconCssClass="fa fa-fw fa-check-square-o" UnSelectedIconCssClass="fa fa-fw fa-square-o" />
+                                        <span>Left Arm</span>
                                     </td>
                                     <td>$500</td>
                                 </tr>
 
                                 <tr>
                                     <td>
-                                        <input type="checkbox" class="facheckbox" id="cbArmRight" runat="server" data-amount="500" />
-                                        <label for="<%= cbArmRight.ClientID %>">Right Arm</label>
+                                        <Rock:RockCheckBox ID="cbArmRight" runat="server" ContainerCssClass="inline-block" SelectedIconCssClass="fa fa-fw fa-check-square-o" UnSelectedIconCssClass="fa fa-fw fa-square-o" />
+                                        <span>Right Arm</span>
                                     </td>
                                     <td>$500</td>
                                 </tr>

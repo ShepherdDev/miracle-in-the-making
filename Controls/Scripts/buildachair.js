@@ -8,35 +8,21 @@
     function calculateTotals() {
         var amount = 0;
         $('table.mitm-bac input[type="checkbox"]:checked').each(function () {
-            amount += $(this).data('amount');
-        });
-
-        //
-        // Disable any checkboxes that are not checked but would put us over the 10,000 limit.
-        //
-        $('table.mitm-bac input[type="checkbox"]:not(":checked")').each(function () {
-            if (amount + $(this).data('amount') > 10000) {
-                $(this).closest('tr').addClass('disabled');
-                $(this).prop('disabled', true);
-            }
-            else {
-                $(this).closest('tr').removeClass('disabled');
-                $(this).prop('disabled', false);
-            }
+            amount += parseInt($(this).closest('td').next().text().replace('$', '').replace(',', ''));
         });
 
         //
         // Update the CSS.
         //
-        $('table.mitm-bac input[type="checkbox"]:checked').closest('tr').addClass('success');
-        $('table.mitm-bac input[type="checkbox"]:not(":checked")').closest('tr').removeClass('success');
+        $('table.mitm-bac input[type="checkbox"]:checked').closest('tr').addClass('text-bold');
+        $('table.mitm-bac input[type="checkbox"]:not(":checked")').closest('tr').removeClass('text-bold');
 
         //
         // Set the total amount.
         //
         $('table.mitm-bac tfoot td:last span').text('$' + amount.formatMoney(0, '.', ','));
         $('table.mitm-bac tfoot td:last input').val(amount);
-        if (amount > 0) {
+        if (amount > 0 && amount <= 10000) {
             $('table.mitm-bac tfoot td:last').removeClass('danger').addClass('success');
             $('.mitm-bac-submit').prop('disabled', false);
         }
@@ -47,15 +33,14 @@
     }
 
     function initialize() {
-        $('table.mitm-bac input[type="checkbox"]').click(function (e) {
-            calculateTotals();
-            e.stopPropagation();
-        });
-
         $('table.mitm-bac tbody tr').click(function (e) {
-            if (e.target.nodeName == 'TD' || e.target.nodeName == 'TR') {
-                $(this).find('input[type=checkbox]').click();
+            if (e.target.nodeName != 'I') {
+                $(this).find('i.fa').click();
+                calculateTotals();
                 e.stopPropagation();
+            }
+            else {
+                calculateTotals();
             }
         });
 

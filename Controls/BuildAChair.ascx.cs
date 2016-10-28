@@ -42,9 +42,8 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         {
             base.OnInit( e );
 
-            RockPage.AddCSSLink( ResolveUrl( "~/Plugins/com_shepherdchurch/MiracleInTheMaking/Styles/buildachair.css" ) );
+            RockPage.AddCSSLink( ResolveUrl( "~/Plugins/com_shepherdchurch/MiracleInTheMaking/Styles/mitm.css" ) );
             RockPage.AddScriptLink( ResolveUrl( "~/Plugins/com_shepherdchurch/MiracleInTheMaking/Scripts/buildachair.js" ) );
-            RockPage.AddScriptLink( ResolveUrl( "~/Plugins/com_shepherdchurch/MiracleInTheMaking/Scripts/facheckbox.js" ) );
 
             //
             // This event gets fired after block settings are updated. it's nice to repaint the
