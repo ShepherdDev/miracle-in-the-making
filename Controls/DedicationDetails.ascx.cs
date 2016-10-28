@@ -91,6 +91,8 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
             if ( !Page.IsPostBack )
             {
                 divAdminActions.Visible = UserCanAdministrate;
+                btnTestAdminEmail.Visible = !string.IsNullOrWhiteSpace( GetAttributeValue( "AdminEmail" ) );
+                btnTestConfirmationEmail.Visible = !string.IsNullOrWhiteSpace( GetAttributeValue( "ConfirmationEmail" ) );
 
                 if ( _dedication.Id != 0 && !UserCanEdit && (CurrentUser == null || _dedication.SeatPledge.PledgedPersonAlias.PersonId != CurrentUser.PersonId) )
                 {
@@ -267,7 +269,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
             dedication.SponsoredBy = tbSponsoredBy.Text.Trim();
             dedication.Biography = tbBiography.Text.Trim();
             dedication.IsAnonymous = cbAnonymous.Checked;
-            dedication.ApprovedBy = CurrentUser.UserName;
+            dedication.ApprovedBy = (cbApproved.Checked ? CurrentUser.UserName : string.Empty);
             oldBinaryFileId = dedication.BinaryFileId;
             dedication.BinaryFileId = imgupPhoto.BinaryFileId;
 
@@ -499,7 +501,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
                 string fromEmail = GlobalAttributesCache.Value( "Organization Email" );
                 List<string> recipients = new List<string>();
                 recipients.Add( GetAttributeValue( "AdminEmail" ) );
-                Email.Send( fromEmail, fromName, "subject", recipients, sb.ToString() );
+                Email.Send( fromEmail, fromName, "New Pledge/Dedication Activity", recipients, sb.ToString() );
             }
         }
 
