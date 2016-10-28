@@ -303,6 +303,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
             imgupPhoto.Enabled = !readOnly;
             cbAnonymous.Enabled = !readOnly;
             cbApproved.Enabled = (!readOnly && IsUserAuthorized( Authorization.APPROVE ));
+            pnlApproved.Visible = IsUserAuthorized( Authorization.APPROVE );
 
             btnSave.Visible = !readOnly;
         }

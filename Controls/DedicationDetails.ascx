@@ -45,11 +45,11 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <asp:Panel ID="pnlApproved" runat="server" CssClass="row" Visible="false">
                             <div class="col-md-12">
                                 <Rock:RockCheckBox ID="cbApproved" runat="server" Label="Approved" />
                             </div>
-                        </div>
+                        </asp:Panel>
                     </div>
                     <div class="col-md-6">
                         <Rock:ImageUploader ID="imgupPhoto" runat="server" Label="Photo" ThumbnailHeight="200" ThumbnailWidth="200" />
