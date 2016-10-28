@@ -10,6 +10,7 @@ using com.shepherdchurch.MiracleInTheMaking.Model;
 
 using Rock;
 using Rock.Attribute;
+using Rock.Communication;
 using Rock.Data;
 using Rock.Model;
 using Rock.Web.Cache;
@@ -28,6 +29,11 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
     [Category( "com_shepherdchurch > Miracle In The Making" )]
     [Description( "Displays the details of a Dedication." )]
     [SecurityAction( Authorization.APPROVE, "The roles and/or users that have access to approve dedications." )]
+    [LinkedPage( "Return Page", "Page to return the user to after they have clicked Save or Cancel." )]
+    [SystemEmailField( "Confirmation Email", "The email to send the person to confirm their pledge information", false )]
+    [EmailField( "Admin Email", "The email address to send administration notice of new pledges.", false )]
+    [LinkedPage( "Seat Pledge Details Page", "Page in the administrative site for seeing the details of a Seat Pledge.", false )]
+    [LinkedPage( "Dedication Details Page", "Page in the administrative site for seeing the details of a Dedication.", false )]
 
     public partial class DedicationDetails : Rock.Web.UI.RockBlock
     {
@@ -82,6 +88,24 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
 
             if ( !Page.IsPostBack )
             {
+                divAdminActions.Visible = UserCanAdministrate;
+
+                if ( _dedication.Id != 0 && !UserCanEdit && (CurrentUser == null || _dedication.SeatPledge.PledgedPersonAlias.PersonId != CurrentUser.PersonId) )
+                {
+                    nbWarningMessage.Text = "Attempt to edit dedication for seat not owned by current user.";
+                    nbWarningMessage.Visible = true;
+
+                    return;
+                }
+
+                if ( string.IsNullOrWhiteSpace( PageParameter( "seatPledgeId" ) ) && (string.IsNullOrWhiteSpace( PageParameter( "seatId" ) ) || string.IsNullOrWhiteSpace( PageParameter( "amount" ) ) || string.IsNullOrWhiteSpace( PageParameter( "choices" ) )) )
+                {
+                    nbWarningMessage.Text = "Configuration error. No pledge information or build-a-chair information found.";
+                    nbWarningMessage.Visible = true;
+
+                    return;
+                }
+
                 ShowDetail();
             }
         }
@@ -121,7 +145,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         protected void btnCancel_Click( object sender, EventArgs e )
         {
-            NavigateToGrandParentPage();
+            NavigateToLinkedPage( "ReturnPage" );
         }
 
         /// <summary>
@@ -132,12 +156,19 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         protected void btnSave_Click( object sender, EventArgs e )
         {
             int? seatPledgeId = PageParameter( "seatPledgeId" ).AsIntegerOrNull();
+            int? seatId = PageParameter( "seatId" ).AsIntegerOrNull();
+            string choices = PageParameter( "choices" );
+            int? amount = PageParameter( "amount" ).AsIntegerOrNull();
             int? oldBinaryFileId = null;
             var dataContext = new MiracleInTheMakingContext();
-            var service = new DedicationService( dataContext );
+            var dedicationService = new DedicationService( dataContext );
+            var seatPledgeService = new SeatPledgeService( dataContext );
             Dedication dedication;
+            SeatPledge seatPledge;
+            bool newSeatPledge = false;
+            bool newDedication = false;
 
-            if ( !UserCanEdit )
+            if ( _dedication.Id != 0 && !UserCanEdit && (CurrentUser == null || _dedication.SeatPledge.PledgedPersonAlias.PersonId != CurrentUser.PersonId) )
             {
                 nbWarningMessage.Text = "You must have done something strange to get here, you don't have edit permission.";
                 nbWarningMessage.Visible = true;
@@ -146,16 +177,88 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
                 return;
             }
 
-            if ( _dedication.Id == 0 )
+            if ( !IsValid() )
             {
-                dedication = new Dedication();
-                service.Add( dedication );
+                return;
+            }
 
-                dedication.SeatPledgeId = seatPledgeId.Value;
+            if ( seatPledgeId.HasValue )
+            {
+                seatPledge = seatPledgeService.Get( seatPledgeId.Value );
+            }
+            else if ( seatId.HasValue && !string.IsNullOrWhiteSpace( choices ) && amount.HasValue && amount.Value > 0 )
+            {
+                //
+                // We need to create a new seat pledge based on the information passed from the URL.
+                //
+                seatPledge = new SeatPledge();
+                seatPledgeService.Add( seatPledge );
+                seatPledge.PledgedPersonAliasId = new PersonAliasService( new RockContext() ).GetPrimaryAliasId( CurrentUser.PersonId.Value ).Value;
+                seatPledge.RequestedSeatId = seatId.Value;
+                seatPledge.Amount = amount.Value;
+
+                foreach ( string choice in choices.Split( ',' ) )
+                {
+                    if ( choice == "full" )
+                    {
+                        seatPledge.RequestedFullSeat = 1;
+                    }
+                    else if ( choice == "back" )
+                    {
+                        seatPledge.RequestedBackRest = 1;
+                    }
+                    else if ( choice == "leg1" )
+                    {
+                        seatPledge.RequestedLeg1 = 1;
+                    }
+                    else if ( choice == "leg2" )
+                    {
+                        seatPledge.RequestedLeg2 = 1;
+                    }
+                    else if ( choice == "leg3" )
+                    {
+                        seatPledge.RequestedLeg3 = 1;
+                    }
+                    else if ( choice == "leg4" )
+                    {
+                        seatPledge.RequestedLeg4 = 1;
+                    }
+                    else if ( choice == "armleft" )
+                    {
+                        seatPledge.RequestedArmLeft = 1;
+                    }
+                    else if ( choice == "armright" )
+                    {
+                        seatPledge.RequestedArmRight = 1;
+                    }
+                }
+
+                dataContext.SaveChanges();
+                newSeatPledge = true;
             }
             else
             {
-                dedication = service.Get( _dedication.Id );
+                nbWarningMessage.Text = "Passed parameters are not recognized.";
+                nbWarningMessage.Visible = true;
+                nbInfoMessage.Visible = false;
+
+                return;
+            }
+
+            //
+            // Load for edit or create a new Dedication.
+            //
+            if ( _dedication.Id == 0 )
+            {
+                dedication = new Dedication();
+                dedicationService.Add( dedication );
+
+                dedication.SeatPledgeId = seatPledge.Id;
+                newDedication = true;
+            }
+            else
+            {
+                dedication = dedicationService.Get( _dedication.Id );
             }
 
             dedication.DedicatedTo = tbDedicatedTo.Text.Trim();
@@ -214,12 +317,189 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
                 }
             }
 
-            NavigateToGrandParentPage();
+            //
+            // Send confirmation e-mail to the logged in user.
+            //
+            if ( newSeatPledge )
+            {
+                SendConfirmationEmail( seatPledge, dedication );
+            }
+
+            //
+            // Send e-mail to the administrator.
+            //
+            SendAdminEmail( newSeatPledge, newDedication, seatPledge.Id );
+
+            NavigateToLinkedPage( "ReturnPage" );
+        }
+
+        /// <summary>
+        /// Test the end-user confirmation e-mail.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        protected void btnTestConfirmationEmail_Click( object sender, EventArgs e )
+        {
+            Dedication dedication;
+
+            dedication = new DedicationService( new MiracleInTheMakingContext() )
+                .Queryable()
+                .Where( d => d.SponsoredBy != "" && d.DedicatedTo != "" ).FirstOrDefault();
+            
+            if (dedication == null)
+            {
+                dedication = new DedicationService( new MiracleInTheMakingContext() ).Queryable().FirstOrDefault();
+
+                if ( dedication == null )
+                {
+                    nbInfoMessage.Text = "Could not find a dedication to test with.";
+                    nbInfoMessage.Visible = true;
+
+                    return;
+                }
+            }
+
+            SendConfirmationEmail( dedication.SeatPledge, dedication );
+
+            nbInfoMessage.Text = "Sent a confirmation e-mail to your primary e-mail address for testing purposes.";
+            nbInfoMessage.Visible = true;
+        }
+
+        /// <summary>
+        /// Test the admin e-mail.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        protected void btnTestAdminEmail_Click( object sender, EventArgs e )
+        {
+            Dedication dedication;
+
+            dedication = new DedicationService( new MiracleInTheMakingContext() )
+                .Queryable()
+                .Where( d => d.SponsoredBy != "" && d.DedicatedTo != "" )
+                .FirstOrDefault();
+
+            if ( dedication == null )
+            {
+                dedication = new DedicationService( new MiracleInTheMakingContext() ).Queryable().FirstOrDefault();
+
+                if ( dedication == null )
+                {
+                    nbInfoMessage.Text = "Could not find a dedication to test with.";
+                    nbInfoMessage.Visible = true;
+
+                    return;
+                }
+            }
+
+            SendAdminEmail( true, true, dedication.SeatPledgeId );
+
+            nbInfoMessage.Text = "Sent an admin notice e-mail to your primary e-mail address for testing purposes.";
+            nbInfoMessage.Visible = true;
         }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Sends a confirmation e-mail to the user if they have a valid e-mail address and
+        /// a e-mail template has been selected.
+        /// </summary>
+        /// <param name="seatPledge">The SeatPledge object to pass to the lava parser.</param>
+        /// <param name="dedication">The Dedication object to pass to the lava parser.</param>
+        protected void SendConfirmationEmail( SeatPledge seatPledge, Dedication dedication )
+        {
+            if ( CurrentPerson.IsEmailActive && !string.IsNullOrWhiteSpace( CurrentPerson.Email ) )
+            {
+                Guid confirmationEmailTemplateGuid = Guid.Empty;
+                if ( Guid.TryParse( GetAttributeValue( "ConfirmationEmail" ), out confirmationEmailTemplateGuid ) )
+                {
+                    var mergeFields = Rock.Lava.LavaHelper.GetCommonMergeFields( RockPage, CurrentPerson );
+                    var recipients = new List<RecipientData>();
+
+                    mergeFields.Add( "SeatPledge", seatPledge );
+                    mergeFields.Add( "Dedication", dedication );
+                    recipients.Add( new RecipientData( CurrentPerson.Email, mergeFields ) );
+
+                    Email.Send( confirmationEmailTemplateGuid, recipients, ResolveRockUrl( "~/" ), ResolveRockUrl( "~~/" ) );
+                }
+            }
+        }
+
+        /// <summary>
+        /// Send an e-mail to the administrative contact about what has happened.
+        /// </summary>
+        /// <param name="newSeatPledge">true if a new seat pledge was created.</param>
+        /// <param name="newDedication">true if a new dedication was created.</param>
+        /// <param name="seatPledgeId">The ID of the seat pledge for linking to.</param>
+        protected void SendAdminEmail(bool newSeatPledge, bool newDedication, int seatPledgeId)
+        {
+            if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "AdminEmail" ) ) )
+            {
+                StringBuilder sb = new StringBuilder();
+                SeatPledge seatPledge = new SeatPledgeService( new MiracleInTheMakingContext() ).Get( seatPledgeId );
+
+                sb.AppendFormat( "New Pledge activity for {0}.<br />", seatPledge.PledgedPersonAlias.Person.FullName );
+                sb.Append( "<br />" );
+
+                if ( newSeatPledge )
+                {
+                    sb.AppendLine( "A new seat pledge has been entered into the system and is waiting seat assignment.<br />" );
+
+                    if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "SeatPledgeDetailsPage" ) ) )
+                    {
+                        var pageParams = new Dictionary<string, string>();
+                        pageParams.Add( "seatPledgeId", seatPledgeId.ToString() );
+
+                        var pageReference = new Rock.Web.PageReference( GetAttributeValue( "SeatPledgeDetailsPage" ), pageParams );
+
+                        sb.AppendFormat( "Click <a href=\"{0}{1}\">here</a> to view the seat pledge.<br />", GlobalAttributesCache.Value( "InternalApplicationRoot" ), pageReference.BuildUrl() );
+                    }
+
+                    sb.AppendLine( "<br />" );
+                }
+
+                if ( newDedication )
+                {
+                    sb.AppendLine( "A new seat dedication message has been entered into the system and is waiting approval.<br />" );
+
+                    if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "DedicationDetailsPage" ) ) )
+                    {
+                        var pageParams = new Dictionary<string, string>();
+                        pageParams.Add( "seatPledgeId", seatPledgeId.ToString() );
+
+                        var pageReference = new Rock.Web.PageReference( GetAttributeValue( "DedicationDetailsPage" ), pageParams );
+
+                        sb.AppendFormat( "Click <a href=\"{0}{1}\">here</a> to view the dedication message.<br />", GlobalAttributesCache.Value( "InternalApplicationRoot" ), pageReference.BuildUrl() );
+                    }
+
+                    sb.AppendLine( "<br />" );
+                }
+                else
+                {
+                    sb.AppendLine( "A seat dedication message has been updated and is waiting approval.<br />" );
+
+                    if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "DedicationDetailsPage" ) ) )
+                    {
+                        var pageParams = new Dictionary<string, string>();
+                        pageParams.Add( "seatPledgeId", seatPledgeId.ToString() );
+
+                        var pageReference = new Rock.Web.PageReference( GetAttributeValue( "DedicationDetailsPage" ), pageParams );
+
+                        sb.AppendFormat( "Click <a href=\"{0}{1}\">here</a> to view the dedication message.<br />", GlobalAttributesCache.Value( "InternalApplicationRoot" ), pageReference.BuildUrl() );
+                    }
+
+                    sb.AppendLine( "<br />" );
+                }
+
+                string fromName = GlobalAttributesCache.Value( "Organization Name" );
+                string fromEmail = GlobalAttributesCache.Value( "Organization Email" );
+                List<string> recipients = new List<string>();
+                recipients.Add( GetAttributeValue( "AdminEmail" ) );
+                Email.Send( fromEmail, fromName, "subject", recipients, sb.ToString() );
+            }
+        }
 
         /// <summary>
         /// Check if the form data is valid for normal processing.
@@ -306,29 +586,6 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
             pnlApproved.Visible = IsUserAuthorized( Authorization.APPROVE );
 
             btnSave.Visible = !readOnly;
-        }
-
-        /// <summary>
-        /// It's kind of a hack, but for the way this is setup it works. Seat Pledge List is linked to the
-        /// Dedication Details page, which is a child of the Seat Pledge Details page. So we need to jump
-        /// all the way back to the Seat Pledge List page.
-        /// </summary>
-        /// <param name="queryString">Parameters to pass to the grand-parent page.</param>
-        /// <returns>true if the redirect has happened, false otherwise.</returns>
-        protected bool NavigateToGrandParentPage(Dictionary<string, string> queryString = null)
-        {
-            var pageCache = PageCache.Read( RockPage.PageId );
-
-            if ( pageCache != null )
-            {
-                var page = (pageCache.ParentPage != null ? pageCache.ParentPage.ParentPage : null);
-                if ( page != null )
-                {
-                    return NavigateToPage( page.Guid, queryString );
-                }
-            }
-
-            return false;
         }
 
         #endregion

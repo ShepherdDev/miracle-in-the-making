@@ -57,9 +57,14 @@
                     </div>
                 </div>
 
-                <div class="actions" id="divActions" runat="server">
+                <div class="actions">
                     <asp:LinkButton ID="btnSave" runat="server" Text="Save" CssClass="btn btn-primary" OnClick="btnSave_Click" />
                     <asp:LinkButton ID="btnCancel" runat="server" Text="Cancel" CssClass="btn btn-link" CausesValidation="false" OnClick="btnCancel_Click" />
+                </div>
+
+                <div id="divAdminActions" runat="server" Visible="false" style="margin-top: 15px;">
+                    <asp:LinkButton ID="btnTestAdminEmail" runat="server" Text="Test Admin Email" CssClass="btn btn-default" OnClick="btnTestAdminEmail_Click" />
+                    <asp:LinkButton ID="btnTestConfirmationEmail" runat="server" Text="Test Confirmation Email" CssClass="btn btn-default" OnClick="btnTestConfirmationEmail_Click" />
                 </div>
             </div>
         </asp:Panel>
