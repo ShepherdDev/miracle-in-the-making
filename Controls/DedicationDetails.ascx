@@ -3,6 +3,10 @@
 
 <asp:UpdatePanel ID="upnlContent" runat="server">
     <ContentTemplate>
+        <Rock:NotificationBox ID="nbWarningMessage" runat="server" NotificationBoxType="Warning" />
+        <Rock:NotificationBox ID="nbEditModeMessage" runat="server" NotificationBoxType="Info" />
+        <Rock:NotificationBox ID="nbInfoMessage" runat="server" NotificationBoxType="Info" />
+
         <asp:Panel ID="pnlDetails" runat="server" CssClass="panel panel-block" Visible="false">
             <asp:HiddenField ID="hfDedicationId" runat="server" />
 
@@ -15,9 +19,6 @@
 
             <div class="panel-body">
                 <asp:ValidationSummary ID="valSummaryTop" runat="server" HeaderText="Please Correct the Following" CssClass="alert alert-danger" />
-                <Rock:NotificationBox ID="nbWarningMessage" runat="server" NotificationBoxType="Warning" />
-                <Rock:NotificationBox ID="nbEditModeMessage" runat="server" NotificationBoxType="Info" />
-                <Rock:NotificationBox ID="nbInfoMessage" runat="server" NotificationBoxType="Info" />
 
                 <div class="row">
                     <div class="col-md-6">
