@@ -1,13 +1,13 @@
-﻿.facheckbox {
-    cursor: pointer;
+﻿.inline-block {
+    display: inline-block;
 }
-.facheckbox .fa-fw {
-    text-align: left;
+
+.text-bold {
+    font-weight: bold;
 }
 
 .mitm-buttons {
     margin-top: 15px;
-    text-align: right;
 }
 
 table.mitm-bac thead tr th, table.mitm-bac tbody tr td, table.mitm-bac tfoot tr td {
