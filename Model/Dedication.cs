@@ -41,8 +41,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
         /// The login name
         /// </value>
         [MaxLength(100)]
-        [Required(ErrorMessage = "ApprovedBy is required")]
-        [DataMember(IsRequired = true)]
+        [DataMember]
         public string ApprovedBy { get; set; }
 
         /// <summary>
@@ -52,8 +51,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
         /// The name being dedicated to
         /// </value>
         [MaxLength(100)]
-        [Required(ErrorMessage = "DedicatedTo is required")]
-        [DataMember(IsRequired = true)]
+        [DataMember]
         public string DedicatedTo { get; set; }
 
         /// <summary>
@@ -63,8 +61,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
         /// The name of the sponsor
         /// </value>
         [MaxLength(100)]
-        [Required(ErrorMessage = "SponsoredBy is required")]
-        [DataMember(IsRequired = true)]
+        [DataMember]
         public string SponsoredBy { get; set; }
 
         /// <summary>
@@ -82,8 +79,7 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
         /// <value>
         /// The biography text
         /// </value>
-        [Required(ErrorMessage = "Biography is required")]
-        [DataMember(IsRequired = true)]
+        [DataMember]
         public string Biography { get; set; }
 
         /// <summary>
