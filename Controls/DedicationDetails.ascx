@@ -48,7 +48,7 @@
 
                         <asp:Panel ID="pnlApproved" runat="server" CssClass="row" Visible="false">
                             <div class="col-md-12">
-                                <Rock:RockCheckBox ID="cbApproved" runat="server" Label="Approved" SelectedIconCssClass="fa fa-check-square-o fa-2x" UnSelectedIconCssClass="fa fa-square-o fa-2x" />
+                                <Rock:RockCheckBox ID="cbApproved" runat="server" Label="Approved" SelectedIconCssClass="fa fa-check-square-o fa-lg" UnSelectedIconCssClass="fa fa-square-o fa-lg" />
                             </div>
                         </asp:Panel>
                     </div>
