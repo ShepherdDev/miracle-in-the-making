@@ -98,6 +98,7 @@
     <Compile Include="Migrations\002_CreateTable_Salvation.cs" />
     <Compile Include="Migrations\003_CreateTable_SeatPledge.cs" />
     <Compile Include="Migrations\004_CreateTable_Dedication.cs" />
+    <Compile Include="Migrations\005_ModifyTable_DedicationForeignKeyCascadeDelete.cs" />
     <Compile Include="Model\Dedication.cs" />
     <Compile Include="Model\DedicationService.cs" />
     <Compile Include="Model\Salvation.cs" />
