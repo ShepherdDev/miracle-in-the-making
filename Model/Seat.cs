@@ -62,7 +62,6 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
         }
 
         #endregion
-
     }
 
     #region Entity Configuration

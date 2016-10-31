@@ -76,8 +76,20 @@ namespace com.shepherdchurch.MiracleInTheMaking.Model
         /// </value>
         public virtual PersonAlias PersonAlias { get; set; }
 
-        #endregion
+        /// <summary>
+        /// Full name of the person being prayed for.
+        /// </summary>
+        [DataMember]
+        [NotMapped]
+        public virtual string FullName
+        {
+            get
+            {
+                return string.Format( "{0} {1}", FirstName, LastName );
+            }
+        }
 
+        #endregion
     }
 
     #region Entity Configuration
