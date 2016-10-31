@@ -10,7 +10,8 @@
     margin-top: 15px;
 }
 
-table.mitm-bac thead tr th, table.mitm-bac tbody tr td, table.mitm-bac tfoot tr td {
+table.mitm-bac thead tr th, table.mitm-bac tbody tr td, table.mitm-bac tfoot tr td,
+table.mitm-sl thead tr th, table.mitm-sl tbody tr td, table.mitm-sl tfoot tr td {
     font-size: 1.5em;
 }
 table.mitm-bac tr td:last-child {
