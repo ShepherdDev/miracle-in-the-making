@@ -42,3 +42,25 @@ table.mitm-bac tfoot td:first-child {
 table.mitm-bac tfoot td:last-child {
     font-weight: bold;
 }
+
+
+/* MySeatPledges */
+.mitm .list-as-blocks li img {
+    height: 64px;
+    float: left;
+}
+
+.mitm .list-as-blocks li h3 {
+    font-size: 28px;
+    margin-top: 14px;
+}
+
+.mitm .list-as-blocks li h2 {
+    font-size: 12px;
+    margin-top: -8px;
+}
+
+.mitm .list-as-blocks ul li a:hover {
+    background-color: #255781;
+    color: #fff;
+}
