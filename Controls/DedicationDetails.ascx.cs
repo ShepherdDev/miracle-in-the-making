@@ -29,7 +29,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
     [Category( "com_shepherdchurch > Miracle In The Making" )]
     [Description( "Displays the details of a Dedication." )]
     [SecurityAction( Authorization.APPROVE, "The roles and/or users that have access to approve dedications." )]
-    [LinkedPage( "Return Page", "Page to return the user to after they have clicked Save or Cancel." )]
+    [LinkedPage( "Return Page", "Page to return the user to after they have clicked Save or Cancel. If not set returns to parent page.", false )]
     [SystemEmailField( "Confirmation Email", "The email to send the person to confirm their pledge information", false )]
     [EmailField( "Admin Email", "The email address to send administration notice of new pledges.", false )]
     [LinkedPage( "Seat Pledge Details Page", "Page in the administrative site for seeing the details of a Seat Pledge.", false )]
@@ -149,7 +149,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         protected void btnCancel_Click( object sender, EventArgs e )
         {
-            NavigateToLinkedPage( "ReturnPage" );
+            NavigateToReturnPage();
         }
 
         /// <summary>
@@ -334,7 +334,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
             //
             SendAdminEmail( newSeatPledge, newDedication, seatPledge.Id );
 
-            NavigateToLinkedPage( "ReturnPage" );
+            NavigateToReturnPage();
         }
 
         /// <summary>
@@ -590,6 +590,18 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
             pnlApproved.Visible = IsUserAuthorized( Authorization.APPROVE );
 
             btnSave.Visible = !readOnly;
+        }
+
+        /// <summary>
+        /// Navigate to either the return page if set or the parent page.
+        /// </summary>
+        void NavigateToReturnPage()
+        {
+            if ( !NavigateToLinkedPage( "ReturnPage" ) )
+            {
+                Response.Redirect( RockPage.BreadCrumbs[RockPage.BreadCrumbs.Count - 2].Url );
+                Context.ApplicationInstance.CompleteRequest();
+            }
         }
 
         #endregion
