@@ -12,7 +12,7 @@
                         <asp:Repeater ID="rpSeatPledges" runat="server">
                             <ItemTemplate>
                                 <li>
-                                    <a href="/page/<%= PageParameter( "SeatPledgeStatusPage" ) %>?seatPledgeId=<%# Eval( "Id" ) %>">
+                                    <a href="/page/<%= seatPledgeStatusPage.Id %>?seatPledgeId=<%# Eval( "Id" ) %>">
                                         <i><asp:Image ID="imgChair" runat="server" ImageUrl="~/Plugins/com_shepherdchurch/MiracleInTheMaking/Assets/mitm_chair-128.png" /></i>
                                         <h3><%# Eval( "AssignedSeat" ) != null ? Eval( "AssignedSeat.FriendlyName" ) : Eval( "RequestedSeat.FriendlyName" ) %></h3>
                                         <%# Eval( "AssignedSeat" ) == null ? "<h2>(requested)</h2>" : "" %>

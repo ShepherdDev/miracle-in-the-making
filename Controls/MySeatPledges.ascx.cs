@@ -24,6 +24,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
     public partial class MySeatPledges : Rock.Web.UI.RockBlock
     {
         int _currentPersonId = 0;
+        protected Rock.Model.Page seatPledgeStatusPage = null;
 
         #region Base Control Methods
 
@@ -68,6 +69,8 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
 
                     return;
                 }
+
+                seatPledgeStatusPage = new PageService( new RockContext() ).Get( GetAttributeValue( "SeatPledgeStatusPage" ).AsGuid() );
 
                 pnlSeatPledges.Visible = true;
                 BindRepeater();
