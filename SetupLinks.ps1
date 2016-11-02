@@ -1,8 +1,40 @@
 ﻿<# Right-click in Explorer and select 'Run In Powershell'
  #
- # - Version 1.0:
- # Builds a hard link from the main project folder (containing this script) to the RockIt folder.
- # Builds a hard link from the optional Controls folder to the 
+ # Prepares a new project for use with either RockIt development kit or a production Rock
+ # installation by setting up windows hard links between the project folders and their corresponding
+ # folders under the RockIt or RockWeb folders. This allows you to maintain version control through
+ # git or another system of the plugin all in one folder tree while still having them show up directly
+ # in Rock.
+ #
+ # Note: Hard links requires NTFS and that both folders exist on the same drive letter.
+ #
+ # Expected project format:
+ #  com.yourchurch.project_name/				- Linked to RockIt/com.yourchurch.project_name/
+ #   |- com.yourchurch.project_name.csproj		- Used to determine your church domain and the project name.
+ #   |- Controls/								- Linked to RockIt/RockWeb/Plugins/com_yourchurch/project_name/
+ #   \- Themes/*								- Linked to RockIt/RockWeb/Themes/*/
+ #
+ # The Controls and Themes folders should be excluded from your project. You will be able to access them
+ # via the RockWeb project (you may need to refresh solution folders after running this script). If you do
+ # include them you will get errors as they will be compiled into the project DLL.
+ #
+ # You can run this script multiple times without errors. So if you add a new theme then you can re-run this
+ # script to link it into the RockIt folder.
+ #
+ # When creating a new theme it is recommended that you use Windows Explorer to copy the Stark theme from the
+ # RockWeb/Themes/ folder into your project's Themes/ folder (with a new name).
+ #
+ # Version History:
+ #
+ #   Version 1.0:
+ #
+ #     Builds a hard link from the main project folder (containing this script) to the RockIt folder
+ #     for easy ability of adding the project into theRockIt solution.
+ #
+ #     Builds a hard link from the optional Controls folder to the RockWeb Plugins folder.
+ #
+ #     Builds hard links from any themes in the optional Themes folder to the RockWeb Themes folder.
+ #
  #>
 
 
@@ -32,8 +64,18 @@ Function Select-FolderDialog
 <#
  # Ask the user where their RockIt folder is.
  #>
-$RockItPath = Select-FolderDialog("Select the RockIt folder")
+$RockItPath = Select-FolderDialog("Select the RockIt folder for development or Rock root IIS folder for production.")
+
+<#
+ # Check if this is a RockIt folder or a production Rock site.
+ #>
 $RockWebPath = Join-Path $RockItPath "RockWeb"
+$HasRockIt = 1
+if ( !(Test-Path $RockWebPath) )
+{
+	$RockWebPath = $RockItPath
+	$HasRockIt = 0
+}
 
 <#
  # Get some helpful variables for path references.
@@ -45,27 +87,27 @@ $ProjectFullName = (Get-ChildItem -Path $ProjectPath -Filter *.csproj)[0].Name
 $ProjectFullName = $ProjectFullName.Substring(0, $ProjectFullName.Length - 7)
 $ProjectOrganziation = $ProjectFullName.Substring(0, $ProjectFullName.LastIndexOf('.'))
 $ProjectName = $ProjectFullName.Substring($ProjectFullName.LastIndexOf('.') + 1)
-$RockItPluginsPath = Join-Path $RockWebPath "Plugins"
-$RockItThemesPath = Join-Path $RockWebPath "Themes"
-$RockItPluginOrganizationPath = Join-Path $RockItPluginsPath $ProjectOrganziation.Replace(".", "_")
-$RockItPluginProjectPath = Join-Path $RockItPluginOrganizationPath $ProjectName
+$RockWebPluginsPath = Join-Path $RockWebPath "Plugins"
+$RockWebThemesPath = Join-Path $RockWebPath "Themes"
+$RockWebPluginOrganizationPath = Join-Path $RockWebPluginsPath $ProjectOrganziation.Replace(".", "_")
+$RockWebPluginProjectPath = Join-Path $RockWebPluginOrganizationPath $ProjectName
 
 <#
  # Make sure this is a RockIt path.
  #>
-if ( !(Test-Path $RockItPluginsPath) -or !(Test-Path $RockItThemesPath) )
+if ( !(Test-Path $RockWebPluginsPath) -or !(Test-Path $RockWebThemesPath) )
 {
-	throw "Path does not appear to be a valid RockIt path"
+	throw "Path does not appear to be a valid RockIt path or Rock production path."
 }
 
 <#
  # Create any intermediate folders we need.
  #>
-if ( !(Test-Path $RockItPluginOrganizationPath) )
+if ( !(Test-Path $RockWebPluginOrganizationPath) )
 {
 	Write-Host "Creating"
-	Write-Host $RockItPluginOrganizationPath
-	New-Item -Path $RockItPluginsPath -Name $ProjectOrganziation.Replace(".", "_") -ItemType directory
+	Write-Host $RockWebPluginOrganizationPath
+	New-Item -Path $RockWebPluginsPath -Name $ProjectOrganziation.Replace(".", "_") -ItemType directory
 }
 
 <#
@@ -73,9 +115,9 @@ if ( !(Test-Path $RockItPluginOrganizationPath) )
  #>
 if ( Test-Path $ProjectControlsPath )
 {
-	if ( !(Test-Path $RockItPluginProjectPath) )
+	if ( !(Test-Path $RockWebPluginProjectPath) )
 	{
-		cmd /c mklink /J "$RockItPluginProjectPath" "$ProjectControlsPath"
+		cmd /c mklink /J "$RockWebPluginProjectPath" "$ProjectControlsPath"
 	}
 }
 
@@ -88,7 +130,7 @@ if ( Test-Path $ProjectThemesPath )
 	Foreach ($theme in $themes)
 	{
 		$SourceTheme = Join-Path $ProjectThemesPath $theme
-		$TargetTheme = Join-Path $RockItThemesPath $theme
+		$TargetTheme = Join-Path $RockWebThemesPath $theme
 
 		if ( !(Test-Path $TargetTheme) )
 		{
@@ -98,13 +140,14 @@ if ( Test-Path $ProjectThemesPath )
 }
 
 <#
- # Hard link the actual project path.
+ # Hard link the actual project path if this is a RockIt install.
  #>
-$TargetProjectPath = Join-Path $RockItPath $ProjectFullName
-if ( !(Test-Path $TargetProjectPath) )
+if ( $HasRockIt -eq 1 )
 {
-	Write-Host $TargetProjectPath
-	Write-Host $ProjectPath
-	cmd /c mklink /J "$TargetProjectPath" "$ProjectPath"
+	$TargetProjectPath = Join-Path $RockItPath $ProjectFullName
+	if ( !(Test-Path $TargetProjectPath) )
+	{
+		cmd /c mklink /J "$TargetProjectPath" "$ProjectPath"
+	}
 }
 
