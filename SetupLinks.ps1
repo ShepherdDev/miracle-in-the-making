@@ -45,26 +45,20 @@ Function Select-FolderDialog
 {
     param([string]$Description="Select Folder",[string]$RootFolder="Desktop")
 
-	[System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null     
+	$app = new-object -com Shell.Application
+	$folder = $app.BrowseForFolder(0, "Select Folder", 0, "C:\")
 
-	$objForm = New-Object System.Windows.Forms.FolderBrowserDialog
-    $objForm.Rootfolder = $RootFolder
-    $objForm.Description = $Description
-    $Show = $objForm.ShowDialog()
-    If ($Show -eq "OK")
-    {
-        Return $objForm.SelectedPath
-    }
-    Else
-    {
-        Write-Error "Operation cancelled by user."
-    }
+    Return $folder.Self.Path
 }
 
 <#
  # Ask the user where their RockIt folder is.
  #>
 $RockItPath = Select-FolderDialog("Select the RockIt folder for development or Rock root IIS folder for production.")
+if ( $RockItPath -eq $null )
+{
+	Return
+}
 
 <#
  # Check if this is a RockIt folder or a production Rock site.
