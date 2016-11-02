@@ -77,7 +77,7 @@ if ( !(Test-Path $RockWebPath) )
 $ProjectPath = Split-Path (Get-Variable MyInvocation).Value.MyCommand.Path
 $ProjectControlsPath = Join-Path $ProjectPath "Controls"
 $ProjectThemesPath = Join-Path $ProjectPath "Themes"
-$ProjectFullName = (Get-ChildItem -Path $ProjectPath -Filter *.csproj)[0].Name
+$ProjectFullName = (Get-ChildItem -Path $ProjectPath -Filter *.csproj).Name
 $ProjectFullName = $ProjectFullName.Substring(0, $ProjectFullName.Length - 7)
 $ProjectOrganziation = $ProjectFullName.Substring(0, $ProjectFullName.LastIndexOf('.'))
 $ProjectName = $ProjectFullName.Substring($ProjectFullName.LastIndexOf('.') + 1)
@@ -145,3 +145,4 @@ if ( $HasRockIt -eq 1 )
 	}
 }
 
+Read-Host -Prompt "All finished, press enter to close."
