@@ -43,10 +43,10 @@
  #>
 Function Select-FolderDialog
 {
-    param([string]$Description="Select Folder",[string]$RootFolder="Desktop")
+    param([string]$Description="Select Folder",[string]$RootFolder="C:\")
 
 	$app = new-object -com Shell.Application
-	$folder = $app.BrowseForFolder(0, "Select Folder", 0, "C:\")
+	$folder = $app.BrowseForFolder(0, $Description, 0, $RootFolder)
 
     Return $folder.Self.Path
 }
@@ -99,8 +99,6 @@ if ( !(Test-Path $RockWebPluginsPath) -or !(Test-Path $RockWebThemesPath) )
  #>
 if ( !(Test-Path $RockWebPluginOrganizationPath) )
 {
-	Write-Host "Creating"
-	Write-Host $RockWebPluginOrganizationPath
 	New-Item -Path $RockWebPluginsPath -Name $ProjectOrganziation.Replace(".", "_") -ItemType directory
 }
 
