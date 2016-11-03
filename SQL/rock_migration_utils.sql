@@ -166,7 +166,7 @@ BEGIN
 	--
 	-- Get or create the parent metric category.
 	--
-	SELECT @ArenaParentMetricId = parent_metric_id FROM ArenaDb.dbo.mtrc_metric WHERE metric_id = @ArenaMetricId
+	SELECT @ArenaParentMetricId = parent_metric_id FROM mtrc_metric WHERE metric_id = @ArenaMetricId
 	IF @ArenaParentMetricId IS NULL
 		SET @RockCategoryId = NULL
 	ELSE
@@ -193,7 +193,7 @@ BEGIN
 			'',
 			NULL,
 			metric_id
-			FROM ArenaDb.dbo.mtrc_metric
+			FROM mtrc_metric
 			WHERE metric_id = @ArenaMetricId
 	SELECT @RockCategoryId = SCOPE_IDENTITY()
 END
@@ -219,7 +219,7 @@ BEGIN
 	--
 	-- Determine if this is a metric category or a metric.
 	--
-	IF (SELECT COUNT(*) FROM ArenaDb.dbo.mtrc_metric WHERE parent_metric_id = @ArenaMetricId) > 0
+	IF (SELECT COUNT(*) FROM mtrc_metric WHERE parent_metric_id = @ArenaMetricId) > 0
 		EXEC _Migrate_MigrateMetricCategory @ArenaMetricId = @ArenaMetricId, @RockCategoryId = @RockCategoryId OUTPUT
 	ELSE
 	BEGIN
@@ -244,7 +244,7 @@ BEGIN
 			@ArenaStartDate = collection_last_date,
 			@ArenaMetricFrequency = collection_frequency,
 			@ArenaSQL = collection_sql_statement
-			FROM ArenaDb.dbo.mtrc_metric WHERE metric_id = @ArenaMetricId
+			FROM mtrc_metric WHERE metric_id = @ArenaMetricId
 
 		--
 		-- Get or create the parent metric category.
@@ -276,7 +276,7 @@ BEGIN
 				dbo._Migrate_RockPersonAliasIdForUsername(modified_by),
 				NEWID(),
 				metric_id
-				FROM ArenaDb.dbo.mtrc_metric
+				FROM mtrc_metric
 				WHERE metric_id = @ArenaMetricId
 		SELECT @RockId = SCOPE_IDENTITY()
 
@@ -336,7 +336,7 @@ BEGIN
 			dbo._Migrate_RockPersonAliasIdForUsername(modified_by),
 			NEWID(),
 			metric_item_id
-			FROM ArenaDB.dbo.mtrc_metric_item
+			FROM mtrc_metric_item
 			WHERE metric_id = @ArenaMetricId
 			  AND (SELECT COUNT(*) FROM MetricValue WHERE ForeignId = metric_item_id) = 0
 			ORDER BY collection_date
@@ -389,7 +389,7 @@ SELECT
 	,@Description = B.[Description]
 	,@CreatedDateTime = B.[date_created]
 	,@ModifiedDateTime = B.[date_modified]
-FROM ArenaDB.dbo.[util_blob] B WITH (NOLOCK)
+FROM [util_blob] B WITH (NOLOCK)
 LEFT OUTER JOIN Rock.dbo.[BinaryFile] F WITH (NOLOCK)
 	ON F.[ForeignId] = B.[blob_id]
 WHERE B.[blob_id] = @BlobId

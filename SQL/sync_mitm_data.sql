@@ -19,7 +19,7 @@ INSERT INTO Rock.dbo._com_shepherdchurch_MiracleInTheMaking_Seat
 		Rock.dbo._Migrate_RockPersonAliasIdForUsername(adb.created_by),
 		Rock.dbo._Migrate_RockPersonAliasIdForUsername(adb.modified_by),
 		adb.seat_id
-		FROM ArenaDB.dbo.cust_sothc_mitm_seat AS adb
+		FROM [VRT-SQL08].ArenaDB.dbo.cust_sothc_mitm_seat AS adb
 		WHERE adb.seat_id NOT IN (SELECT ForeignId FROM Rock.dbo._com_shepherdchurch_MiracleInTheMaking_Seat WHERE ForeignId IS NOT NULL)
 
 UPDATE rdb SET
@@ -28,7 +28,7 @@ UPDATE rdb SET
 	rdb.ModifiedDateTime = adb.date_modified,
 	rdb.ModifiedByPersonAliasId = Rock.dbo._Migrate_RockPersonAliasIdForUsername(modified_by)
 	FROM Rock.dbo._com_shepherdchurch_MiracleInTheMaking_Seat AS rdb
-	INNER JOIN ArenaDB.dbo.cust_sothc_mitm_seat AS adb ON adb.seat_id = rdb.ForeignId
+	INNER JOIN  [VRT-SQL08].ArenaDB.dbo.cust_sothc_mitm_seat AS adb ON adb.seat_id = rdb.ForeignId
 	WHERE adb.date_modified > rdb.ModifiedDateTime
 
 
@@ -57,7 +57,7 @@ INSERT INTO Rock.dbo._com_shepherdchurch_MiracleInTheMaking_SeatPledge
 		Rock.dbo._Migrate_RockPersonAliasIdForUsername(adb.created_by),
 		Rock.dbo._Migrate_RockPersonAliasIdForUsername(adb.modified_by),
 		adb.seat_pledge_id
-		FROM ArenaDB.dbo.cust_sothc_mitm_seat_pledge AS adb
+		FROM  [VRT-SQL08].ArenaDB.dbo.cust_sothc_mitm_seat_pledge AS adb
 		WHERE adb.seat_pledge_id NOT IN (SELECT ForeignId FROM Rock.dbo._com_shepherdchurch_MiracleInTheMaking_SeatPledge WHERE ForeignId IS NOT NULL)
 
 UPDATE rdb SET
@@ -76,7 +76,7 @@ UPDATE rdb SET
 	rdb.ModifiedByPersonAliasId = Rock.dbo._Migrate_RockPersonAliasIdForUsername(adb.modified_by),
 	rdb.ModifiedDateTime = adb.date_modified
 	FROM Rock.dbo._com_shepherdchurch_MiracleInTheMaking_SeatPledge AS rdb
-	INNER JOIN ArenaDB.dbo.cust_sothc_mitm_seat_pledge AS adb ON adb.seat_pledge_id = rdb.ForeignId
+	INNER JOIN  [VRT-SQL08].ArenaDB.dbo.cust_sothc_mitm_seat_pledge AS adb ON adb.seat_pledge_id = rdb.ForeignId
 	WHERE adb.date_modified > rdb.ModifiedDateTime
 
 
@@ -117,8 +117,8 @@ END
 DECLARE ArenaCursor INSENSITIVE CURSOR FOR
 	SELECT
 		 B.[blob_id]
-	FROM ArenaDB.dbo.cust_sothc_mitm_dedication AS D WITH (NOLOCK)
-	INNER JOIN ArenaDB.dbo.[util_blob] B WITH (NOLOCK) ON B.[blob_id] = D.[blob_id]
+	FROM  [VRT-SQL08].ArenaDB.dbo.cust_sothc_mitm_dedication AS D WITH (NOLOCK)
+	INNER JOIN  [VRT-SQL08].ArenaDB.dbo.[util_blob] B WITH (NOLOCK) ON B.[blob_id] = D.[blob_id]
 
 OPEN ArenaCursor
 FETCH NEXT FROM ArenaCursor INTO @BlobId
@@ -154,7 +154,7 @@ INSERT INTO Rock.dbo._com_shepherdchurch_MiracleInTheMaking_Dedication
 		Rock.dbo._Migrate_RockPersonAliasIdForUsername(adb.created_by),
 		Rock.dbo._Migrate_RockPersonAliasIdForUsername(adb.modified_by),
 		adb.dedication_id
-		FROM ArenaDB.dbo.cust_sothc_mitm_dedication AS adb
+		FROM  [VRT-SQL08].ArenaDB.dbo.cust_sothc_mitm_dedication AS adb
 		WHERE adb.dedication_id NOT IN (SELECT ForeignId FROM Rock.dbo._com_shepherdchurch_MiracleInTheMaking_Dedication)
 
 UPDATE rdb SET
@@ -167,7 +167,7 @@ UPDATE rdb SET
 	rdb.ModifiedDateTime = adb.date_modified,
 	rdb.ModifiedByPersonAliasId = Rock.dbo._Migrate_RockPersonAliasIdForUsername(adb.modified_by)
 	FROM Rock.dbo._com_shepherdchurch_MiracleInTheMaking_Dedication AS rdb
-	INNER JOIN ArenaDB.dbo.cust_sothc_mitm_dedication AS adb ON adb.dedication_id = rdb.Id
+	INNER JOIN  [VRT-SQL08].ArenaDB.dbo.cust_sothc_mitm_dedication AS adb ON adb.dedication_id = rdb.Id
 	WHERE adb.date_modified > rdb.ModifiedDateTime
 
 
@@ -188,7 +188,7 @@ INSERT INTO Rock.dbo._com_shepherdchurch_MiracleInTheMaking_Salvation
 		Rock.dbo._Migrate_RockPersonAliasIdForUsername(adb.created_by),
 		Rock.dbo._Migrate_RockPersonAliasIdForUsername(adb.modified_by),
 		adb.salvation_id
-		FROM ArenaDB.dbo.cust_sothc_mitm_salvation AS adb
+		FROM  [VRT-SQL08].ArenaDB.dbo.cust_sothc_mitm_salvation AS adb
 		WHERE adb.salvation_id NOT IN (SELECT ForeignId FROM Rock.dbo._com_shepherdchurch_MiracleInTheMaking_Salvation)
 
 UPDATE rdb SET
@@ -199,5 +199,5 @@ UPDATE rdb SET
 	rdb.ModifiedDateTime = adb.date_modified,
 	rdb.ModifiedByPersonAliasId = Rock.dbo._Migrate_RockPersonAliasIdForUsername(adb.modified_by)
 	FROM Rock.dbo._com_shepherdchurch_MiracleInTheMaking_Salvation AS rdb
-	INNER JOIN ArenaDB.dbo.cust_sothc_mitm_salvation AS adb ON adb.salvation_id = rdb.Id
+	INNER JOIN  [VRT-SQL08].ArenaDB.dbo.cust_sothc_mitm_salvation AS adb ON adb.salvation_id = rdb.Id
 	WHERE adb.date_modified > rdb.ModifiedDateTime
