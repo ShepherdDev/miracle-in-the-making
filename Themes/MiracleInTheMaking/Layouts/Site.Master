@@ -54,7 +54,7 @@
 
         <!-- Page Header -->
         <header>
-            <Rock:Zone Name="Login" runat="server" Visible="false" />
+            <Rock:Zone Name="Login" runat="server" Visible="true" />
             <div class="header-content container">
                 <Rock:Zone Name="Header" runat="server" />
             </div>
