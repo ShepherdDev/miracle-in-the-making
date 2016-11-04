@@ -104,10 +104,9 @@ ul.navbar-nav1 {
     li {
         margin: 0 5px;
         padding: 0 0 8px;
-        float: left;
+        display: inline-block;
         position: relative;
         list-style: none;
-        z-index:1000;
     }
 
     /* main level link */
@@ -121,7 +120,6 @@ ul.navbar-nav1 {
         padding:  4px 20px;
         margin: 0;
         .borderRadius( 1.6em );
-	    z-index:1000;
     }
 
     .giving a {
@@ -134,24 +132,20 @@ ul.navbar-nav1 {
         padding:  4px 20px;
         margin: 0;
         .borderRadius( 1.6em );
-
-	    z-index:1000;
     }
 
     /* main level link hover */
     .current a, li:hover > a {
-	    color:  #4180cf;
-        z-index:1000;
+        color:  #4180cf;
     }
 
     li.giving:hover > a {
-	    color: #a2ab4b;
-        z-index:1000;
+        color: #a2ab4b;
     }
 
     /* sub levels link hover */
     li:hover li a {
-	    font: 12px "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
+        font: 12px "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
         text-transform: none;
         font-weight: normal;
 
@@ -161,13 +155,12 @@ ul.navbar-nav1 {
         -webkit-box-shadow: none;
         -moz-box-shadow: none;
         text-shadow: 0 1px 1px rgba(0, 0, 0, .1);
-        z-index:1000;
     }
 
     /* level 2 list */
     ul {
         li:hover a {
-	        font: 12px "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
+            font: 12px "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
             text-transform: none;
             font-weight: normal;
 
@@ -176,16 +169,14 @@ ul.navbar-nav1 {
             color: #fff;
             .box-shadow( none );
             text-shadow: 0 1px 1px rgba(0, 0, 0, .1);
-            z-index:1000;
         }
 
         a:hover {
-	        background: #5e91cc !important;
+            background: #5e91cc !important;
 
             color: #fff !important;
             .borderRadius( 0px );
             text-shadow: 0 1px 1px rgba(0, 0, 0, .1);
-            z-index:1000;
         }
 
         li {
@@ -193,9 +184,10 @@ ul.navbar-nav1 {
                 padding: 8px;
             }
 
-	        float: none;
+            float: none;
             margin: 0;
-	        padding: 0;
+            padding: 0;
+            display: block;
         }
 
         a {
@@ -213,8 +205,9 @@ ul.navbar-nav1 {
 
         /* level 3+ list */
         ul {
-            left: 146px;
+            left: 115px;
             top: -3px;
+            width: 150px;
 
             background: #5e91cc;
         }
@@ -222,7 +215,7 @@ ul.navbar-nav1 {
             background: #477fc1 !important;
 
             color: #fff !important;
-            .borderRadius( 0px );
+            /* .borderRadius( 0px ); */
             text-shadow: 0 1px 1px rgba(0, 0, 0, .1);
         }
 
@@ -230,45 +223,48 @@ ul.navbar-nav1 {
         display: none;
         margin: 0;
         padding: 0;
-        width: 150px;
+        width: auto;
         position: absolute;
         top: 30px;
-        left: -23px;
+        left: -10px;
+        right: -10px;
         border: none;
         .borderRadius( 5px );
         .box-shadow( 0 1px 3px rgba(0, 0, 0, .3) );
+        z-index: 1;
     }
 
     /* dropdown */
     li:hover > ul {
-	    display: block;
+        display: block;
     }
 
     display: inline-block;
     margin: 0;
-    padding: 0px 6px 0px 40px;
+    padding: 0px 0px 0px 0px;
     line-height: 100%;
-    z-index:1000;
 }
 
-    .arrow-up {
-        border-color:transparent transparent #477fc1;
-        border-style:solid;
-        border-width:0 5px 5px;
-        float:left;
-        height:0;
-        margin:-5px 0 0 70px;
-        width:0;
-    }
+.arrow-up {
+    border-color:transparent transparent #477fc1;
+    border-style:solid;
+    border-width:0 5px 5px;
+    height:0;
+    width:0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -5px;
+    margin-bottom: 0px;
+}
 
 /* clearfix */
 ul.navbar-nav1:after {
     content: ".";
-	display: block;
-	clear: both;
-	visibility: hidden;
-	line-height: 0;
-	height: 0;
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
 }
 
 #zone-login {
