@@ -29,23 +29,34 @@ html {
 }
 
 body {
-	background: #4180CF url(https://www.miracleinthemaking.com/Images/miracleinthemaking/MITM_bg.jpg) no-repeat center top;
-	font: 12px "Lucida Grande", "Trebuchet MS", Arial, Helvetica, sans-serif;
-	text-align: justify;
-	color: #3f3b4d;
-	padding: 0px;
-	margin: 0px;
+    background: #4180CF url(https://www.miracleinthemaking.com/Images/miracleinthemaking/MITM_bg.jpg) no-repeat center top;
+    font: 12px "Lucida Grande", "Trebuchet MS", Arial, Helvetica, sans-serif;
+    color: #3f3b4d;
+    padding: 0px;
+    margin: 0px;
+}
+
+#zone-main {
+    text-align: justify;
 }
 
 main {
     h1:empty {
         display: none;
     }
+    > h1 {
+        text-transform: uppercase;
+        color: #4174d5;
+        font-weight: bold;
+        font-size: 64px;
+        text-align: center;
+        margin-top: 0px;
+    }
 
     display: block;
     background-color: @body-bg;
     .border-bottom-radius( @border-radius-large );
-    padding-top: @padding-large-vertical;
+    padding-top: @padding-small-vertical;
     padding-bottom: @padding-large-vertical;
 }
 
@@ -92,7 +103,7 @@ header {
         text-align: center;
         text-transform: uppercase;
         padding-top: 10px;
-        padding-bottom: 20px;
+        padding-bottom: 0px;
     }
 
     .header-content {
@@ -400,6 +411,28 @@ footer {
         }
     }
 }
+
+/* General MiTM styles */
+div.blueheader {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font: 24px 'Cuprum', arial, serif;
+    color: #4180cf;
+}
+div.greenheader{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #a2ab4b;
+    font: 24px 'Cuprum', arial, serif;
+}
+div.redheader {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font: 24px 'Cuprum', arial, serif;
+    font-weight: bold;
+    color: #ac0000;
+}
+
 
 // 4. Responsive Overrides
 // -------------------------
