@@ -300,7 +300,7 @@ GO
 
 ---------------------------------------------------------------------
 --
--- Migrate a metric as a metric.
+-- Migrate the values of a metric.
 --
 IF OBJECT_ID('_Migrate_MigrateMetricValues') IS NULL
 	EXEC ('CREATE PROCEDURE _Migrate_MigrateMetricValues AS SELECT 1')
@@ -340,13 +340,26 @@ BEGIN
 			WHERE metric_id = @ArenaMetricId
 			  AND (SELECT COUNT(*) FROM MetricValue WHERE ForeignId = metric_item_id) = 0
 			ORDER BY collection_date
+
+	UPDATE MV
+		SET MV.YValue = MMI.metric_value,
+			MV.ModifiedDateTime = MMI.date_modified,
+			MV.ModifiedByPersonAliasId = dbo._Migrate_RockPersonAliasIdForUsername(MMI.modified_by)
+		FROM MetricValue AS MV
+		INNER JOIN mtrc_metric_item AS MMI ON MMI.metric_id = MV.ForeignId
+		WHERE MMI.date_modified > MV.ModifiedDateTime
+
+	DELETE MV
+		FROM MetricValue AS MV
+		LEFT JOIN mtrc_metric_item AS MMI ON MMI.metric_item_id = MV.ForeignId
+		WHERE MV.ForeignId IS NOT NULL AND MMI.metric_item_id IS NULL
 END
 GO
 
 
 ---------------------------------------------------------------------
 --
--- Migrate a metric as a metric.
+-- Migrate a blob, forget why I couldn't use Minecart's directly.
 --
 IF OBJECT_ID('_Migrate_MigrateBlob') IS NULL
 	EXEC ('CREATE PROCEDURE _Migrate_MigrateBlob AS SELECT 1')
