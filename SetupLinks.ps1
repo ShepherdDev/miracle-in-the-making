@@ -12,7 +12,8 @@
  #  com.yourchurch.project_name/				- Linked to RockIt/com.yourchurch.project_name/
  #   |- com.yourchurch.project_name.csproj		- Used to determine your church domain and the project name.
  #   |- Controls/								- Linked to RockIt/RockWeb/Plugins/com_yourchurch/project_name/
- #   \- Themes/*								- Linked to RockIt/RockWeb/Themes/*/
+ #   |- Themes/*								- Linked to RockIt/RockWeb/Themes/*/
+ #   \- Webhooks/*								- Linked to RockIt/RockWeb/Webhooks/*
  #
  # The Controls and Themes folders should be excluded from your project. You will be able to access them
  # via the RockWeb project (you may need to refresh solution folders after running this script). If you do
@@ -25,6 +26,10 @@
  # RockWeb/Themes/ folder into your project's Themes/ folder (with a new name).
  #
  # Version History:
+ #
+ #   Version 1.1:
+ #
+ #     Add support for hard linking Webhooks.
  #
  #   Version 1.0:
  #
@@ -77,19 +82,21 @@ if ( !(Test-Path $RockWebPath) )
 $ProjectPath = Split-Path (Get-Variable MyInvocation).Value.MyCommand.Path
 $ProjectControlsPath = Join-Path $ProjectPath "Controls"
 $ProjectThemesPath = Join-Path $ProjectPath "Themes"
+$ProjectWebhooksPath = Join-Path $ProjectPath "Webhooks"
 $ProjectFullName = (Get-ChildItem -Path $ProjectPath -Filter *.csproj).Name
 $ProjectFullName = $ProjectFullName.Substring(0, $ProjectFullName.Length - 7)
 $ProjectOrganziation = $ProjectFullName.Substring(0, $ProjectFullName.LastIndexOf('.'))
 $ProjectName = $ProjectFullName.Substring($ProjectFullName.LastIndexOf('.') + 1)
 $RockWebPluginsPath = Join-Path $RockWebPath "Plugins"
 $RockWebThemesPath = Join-Path $RockWebPath "Themes"
+$RockWebWebhooksPath = Join-Path $RockWebPath "Webhooks"
 $RockWebPluginOrganizationPath = Join-Path $RockWebPluginsPath $ProjectOrganziation.Replace(".", "_")
 $RockWebPluginProjectPath = Join-Path $RockWebPluginOrganizationPath $ProjectName
 
 <#
  # Make sure this is a RockIt path.
  #>
-if ( !(Test-Path $RockWebPluginsPath) -or !(Test-Path $RockWebThemesPath) )
+if ( !(Test-Path $RockWebPluginsPath) -or !(Test-Path $RockWebThemesPath) -or !(Test-Path $RockWebWebhooksPath) )
 {
 	throw "Path does not appear to be a valid RockIt path or Rock production path."
 }
@@ -103,7 +110,7 @@ if ( !(Test-Path $RockWebPluginOrganizationPath) )
 }
 
 <#
- # Hard link the a from the Plugins folder to the Project Controls.
+ # Hard link the from the Plugins folder to the Project Controls.
  #>
 if ( Test-Path $ProjectControlsPath )
 {
@@ -127,6 +134,26 @@ if ( Test-Path $ProjectThemesPath )
 		if ( !(Test-Path $TargetTheme) )
 		{
 			cmd /c mklink /J "$TargetTheme" "$SourceTheme"
+		}
+	}
+}
+
+<#
+ # Hard link each webhook if it doesn't already exist.
+ #>
+if ( Test-Path $ProjectWebhooksPath )
+{
+	$webhooks = (Get-ChildItem -Path $ProjectWebhooksPath *.ashx)
+	Foreach ($webhook in $webhooks)
+	{
+		$SourceWebhook = Join-Path $ProjectWebhooksPath $webhook
+		$TargetWebhook = Join-Path $RockWebWebhooksPath $webhook
+		Write-Host $SourceWebhook
+		Write-Host $TargetWebhook
+
+		if ( !(Test-Path $TargetWebhook) )
+		{
+			cmd /c mklink /H "$TargetWebhook" "$SourceWebhook"
 		}
 	}
 }
