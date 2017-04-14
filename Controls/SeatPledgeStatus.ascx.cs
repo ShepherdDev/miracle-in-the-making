@@ -287,7 +287,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
         {
             var qryParams = new Dictionary<string, string>();
             qryParams.Add( "seatPledgeId", seatPledgeId.ToString() );
-            NavigateToLinkedPage( "DedicationDetailsPage", qryParams );
+            NavigateToLinkedPage( "AdoptFullSeatPage", qryParams );
         }
 
         /// <summary>
