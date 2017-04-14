@@ -7,11 +7,11 @@
 
         <asp:HiddenField ID="hfAmount" runat="server" />
         <asp:Panel ID="pnlAdoptRemaining" CssClass="row" runat="server" Visible="false">
-            <div class="col-sm-3">
+            <div class="col-sm-3 text-center">
                 <asp:Image ID="imgChair" runat="server" ImageUrl="~/Plugins/com_shepherdchurch/MiracleInTheMaking/Assets/mitm_chair-128.png" />
             </div>
             
-            <div class="col-sm-9 text-center">
+            <div class="col-sm-9">
                 <p>
                     You have already pledged <asp:Literal ID="ltAlready" runat="server" /> towards
                     this seat. <asp:Literal ID="ltNeeded" runat="server" /> more is needed to adopt
