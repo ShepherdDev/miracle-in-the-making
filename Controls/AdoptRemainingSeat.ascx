@@ -11,7 +11,7 @@
                 <asp:Image ID="imgChair" runat="server" ImageUrl="~/Plugins/com_shepherdchurch/MiracleInTheMaking/Assets/mitm_chair-128.png" />
             </div>
             
-            <div class="col-sm-9">
+            <div class="col-sm-9 text-center">
                 <p>
                     You have already pledged <asp:Literal ID="ltAlready" runat="server" /> towards
                     this seat. <asp:Literal ID="ltNeeded" runat="server" /> more is needed to adopt
@@ -20,7 +20,7 @@
                     reflected on the website so please be patient.
                 </p>
                 
-                <p>
+                <p style="margin-top: 30px;">
                     <asp:LinkButton ID="hlCancel" runat="server" CssClass="btn btn-default" OnClick="btnCancel_Click">Cancel</asp:LinkButton>
                     <asp:LinkButton ID="hlAdopt" runat="server" CssClass="btn btn-primary" OnClick="btnAdopt_Click">Adopt</asp:LinkButton>
                 </p>
