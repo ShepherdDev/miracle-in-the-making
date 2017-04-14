@@ -141,9 +141,6 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
             var seatPledgeService = new SeatPledgeService( dataContext );
             var contributionService = new FinancialTransactionDetailService( new RockContext() );
             decimal pledgeTotal;
-            decimal pledgeGiven;
-            decimal percentage;
-            int accountId = new FinancialAccountService( new RockContext() ).Get( GetAttributeValue( "Account" ).AsGuid() ).Id;
 
             //
             // Determine how much has been pledged towards this seat
