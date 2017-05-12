@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 
 <script runat="server">
-    
+
     /// <summary>
     /// An optional subtitle
     /// </summary>
@@ -29,7 +29,7 @@
     /// </summary>
     /// <value>
     /// The close message.
-    /// </value>    
+    /// </value>
     public override string CloseMessage
     {
         get
@@ -71,8 +71,8 @@
         {
             btnCancel.AddCssClass( "btn-primary" );
         }
-    }    
-    
+    }
+
 </script>
 
 <html class="no-js">
@@ -140,6 +140,8 @@
 </html>
 <script>
     Sys.Application.add_load(function () {
-        Rock.controls.modal.updateSize();
+        new ResizeSensor($('#dialog'), function () {
+            $('#modal-popup iframe', window.parent.document).height($('#dialog').height());
+        });
     });
 </script>
