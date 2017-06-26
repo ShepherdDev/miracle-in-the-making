@@ -318,7 +318,18 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
             }
             else
             {
-                seatPledge.AssignedSeatId = seatService.GetBySectionAndNumber( tbAssignedSeat.Text.Substring( 0, 1 ), int.Parse( tbAssignedSeat.Text.Substring( 1 ) ) ).Id;
+                if ( char.IsDigit( tbAssignedSeat.Text[0] ) )
+                {
+                    int seatNumber = tbAssignedSeat.Text.AsInteger();
+
+                    seatPledge.AssignedSeatId = seatService.Queryable()
+                        .Where( s => s.SeatNumber == seatNumber )
+                        .FirstOrDefault().Id;
+                }
+                else
+                {
+                    seatPledge.AssignedSeatId = seatService.GetBySectionAndNumber( tbAssignedSeat.Text.Substring( 0, 1 ), int.Parse( tbAssignedSeat.Text.Substring( 1 ) ) ).Id;
+                }
             }
 
             //

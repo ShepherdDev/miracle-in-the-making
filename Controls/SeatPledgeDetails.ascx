@@ -36,7 +36,7 @@
                     <div class="col-md-6">
                         <MITM:TextBox ID="tbAssignedSeat" runat="server" Label="Assigned Seat" />
                         <asp:RegularExpressionValidator ID="revAssignedSeat" runat="server"
-                            ControlToValidate="tbAssignedSeat" ValidationExpression="^[a-zA-Z][0-9]+$"
+                            ControlToValidate="tbAssignedSeat" ValidationExpression="^[a-zA-Z]?[0-9]+$"
                             ErrorMessage="Invalid seat assigned. Please enter a valid seat name."
                             Display="Dynamic" CssClass="validation-error help-inline" />
                     </div>

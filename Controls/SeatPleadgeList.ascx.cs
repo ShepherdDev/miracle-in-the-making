@@ -219,7 +219,7 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
             {
                 SeatPledge seatPledge = ( SeatPledge )e.Row.DataItem;
 
-                if ( !IsUserAuthorized( Rock.Security.Authorization.EDIT ) || !seatPledge.Dedications.Any() )
+                if ( !IsUserAuthorized( Rock.Security.Authorization.EDIT ) )
                 {
                     var lb = e.Row.Cells.Cast<DataControlFieldCell>()
                         .Where( c => c.ContainingField.HeaderText == "Dedication" ).FirstOrDefault()
