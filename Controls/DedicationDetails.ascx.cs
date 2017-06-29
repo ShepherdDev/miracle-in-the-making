@@ -186,6 +186,12 @@ namespace RockWeb.Plugins.com_shepherdchurch.MiracleInTheMaking
                 return;
             }
 
+            if ( seatId.HasValue )
+            {
+                var seat = new SeatService( dataContext ).Queryable().Where( s => s.SeatNumber == seatId.Value ).FirstOrDefault();
+                seatId = seat != null ? (int?)seat.Id : null;
+            }
+
             if ( seatPledgeId.HasValue )
             {
                 seatPledge = seatPledgeService.Get( seatPledgeId.Value );
