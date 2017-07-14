@@ -1,6 +1,7 @@
 ﻿<%@ WebHandler Language="C#" Class="MiTMSeatXmlInfo" %>
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,7 @@ public class MiTMSeatXmlInfo : IHttpHandler
         XmlDeclaration xdecl;
         XmlElement xroot;
         string section = "A";
+        string name = string.Empty;
 
         xdecl = xdoc.CreateXmlDeclaration( "1.0", "UTF-8", null );
         xdoc.InsertBefore( xdecl, xdoc.DocumentElement );
@@ -35,10 +37,33 @@ public class MiTMSeatXmlInfo : IHttpHandler
         }
 
         //
+        // Get the name to be searched for.
+        //
+        if ( !String.IsNullOrWhiteSpace( context.Request.QueryString["name"] ) )
+        {
+            name = context.Request.QueryString["name"].Trim();
+        }
+
+        //
         // Populate the XML document with the information about the seats in the
         // requested section.
         //
-        var seats = new SeatService( dbContext ).GetBySection( section );
+        IEnumerable<Seat> seats;
+
+        if ( name != string.Empty )
+        {
+            seats = new DedicationService( dbContext ).Queryable()
+                .Where( d => ( d.IsAnonymous == false && d.SponsoredBy.Contains( name ) ) || d.DedicatedTo.Contains( name ) )
+                .Select( d => d.SeatPledge )
+                .Where( s => s.AssignedSeat != null )
+                .Select( s => s.AssignedSeat )
+                .Distinct();
+        }
+        else
+        {
+            seats = new SeatService( dbContext ).GetBySection( section );
+        }
+
         foreach ( Seat seat in seats )
         {
             xroot.AppendChild( SeatToXml( seat, xdoc, dbContext ) );
@@ -146,7 +171,7 @@ public class MiTMSeatXmlInfo : IHttpHandler
         }
 
         //
-        // If there is a valid dedicatio record (and it has been approved), then include
+        // If there is a valid dedication record (and it has been approved), then include
         // information about the dedication.
         //
         if ( dedication != null && !String.IsNullOrEmpty( dedication.ApprovedBy ) )
